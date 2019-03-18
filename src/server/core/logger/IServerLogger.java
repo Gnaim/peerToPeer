@@ -13,8 +13,13 @@ public class IServerLogger implements Logger {
     }
 
     @Override
-    public void clientSentCommand(String ip, String name, String command) {
-        System.out.println("client: [" + ip + "] " + name + ", sent : {" + command + "}");
+    public void systemMessage(String message) {
+        System.out.println(message);
+    }
+
+    @Override
+    public void clientSentCommand(String ip, String command) {
+        System.out.println("client: [" + ip.split("/")[1]  + "]   sent : [" + command + "]");
     }
 
     @Override

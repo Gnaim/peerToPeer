@@ -5,7 +5,9 @@ public interface Logger {
 
     void serverClosing();
 
-    void clientSentCommand(String ip, String name, String command);
+    void systemMessage(String message);
+
+    void clientSentCommand(String ip, String command);
 
     void clientConnected(String ip);
 

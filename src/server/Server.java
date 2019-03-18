@@ -20,6 +20,7 @@ public class Server implements Runnable {
     private ByteBuffer byteBuffer;
     private IServerLogger iServerLogger;
     private int port;
+    private boolean stop;
 
     /**
      * @param port
@@ -28,6 +29,7 @@ public class Server implements Runnable {
     public Server(int port) throws IOException {
         this.serverSocketChannel = ServerSocketChannel.open();
         this.port = port;
+        this.stop = false;
         this.byteBuffer = ByteBuffer.allocateDirect(512);
         this.selector = Selector.open();
         this.iServerLogger = new IServerLogger();
@@ -48,15 +50,13 @@ public class Server implements Runnable {
      * @throws IOException
      */
     public void repeat(SelectionKey key) throws IOException {
-        System.out.println("Nouveau message ");
+
         SocketChannel sc = (SocketChannel) key.channel();
         sc.read(this.byteBuffer);
-
         this.byteBuffer.flip();
         Charset charset = Charset.forName("UTF-8");
         CharBuffer charBuffer = charset.decode(this.byteBuffer);
-        System.out.println(charBuffer.toString());
-
+        iServerLogger.clientSentCommand(sc.getRemoteAddress().toString(),charBuffer.toString());
         for (SelectionKey k1 : selector.keys()) {
             if (k1.isAcceptable()) {
 
@@ -78,7 +78,7 @@ public class Server implements Runnable {
             this.serverSocketChannel.configureBlocking(false);
             this.serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
             iServerLogger.serverStarting(this.port);
-            while (true) {
+            while (!stop) {
                 selector.select();
                 for (SelectionKey k : selector.selectedKeys()) {
                     if (k.isAcceptable())
@@ -89,7 +89,18 @@ public class Server implements Runnable {
                 selector.selectedKeys().clear();
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            iServerLogger.systemMessage(e.getMessage());
         }
     }
+
+    public synchronized void finish() {
+        this.stop = true;
+        try {
+            serverSocketChannel.close();
+        } catch (IOException e) {
+            iServerLogger.systemMessage(e.getMessage());
+        }
+        iServerLogger.serverClosing();
+    }
+
 }
