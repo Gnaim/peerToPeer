@@ -1,5 +1,7 @@
 package server;
 
+import server.core.logger.IServerLogger;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
@@ -11,38 +13,37 @@ import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.Charset;
 
-public class Server implements Runnable{
+public class Server implements Runnable {
 
     private ServerSocketChannel serverSocketChannel;
     private Selector selector;
     private ByteBuffer byteBuffer;
+    private IServerLogger iServerLogger;
     private int port;
 
     /**
-     *
      * @param port
      * @throws IOException
      */
     public Server(int port) throws IOException {
-
+        this.serverSocketChannel = ServerSocketChannel.open();
         this.port = port;
-        this.byteBuffer  = ByteBuffer.allocateDirect(512);
-
+        this.byteBuffer = ByteBuffer.allocateDirect(512);
+        this.selector = Selector.open();
+        this.iServerLogger = new IServerLogger();
     }
 
     /**
-     *
      * @throws IOException
      */
     public void accept() throws IOException {
         SocketChannel socketChannel = serverSocketChannel.accept();
         socketChannel.configureBlocking(false);
         socketChannel.register(selector, SelectionKey.OP_READ);
-        System.out.println("new connection : " + socketChannel);
+        iServerLogger.clientConnected(socketChannel.getRemoteAddress().toString());
     }
 
     /**
-     *
      * @param key
      * @throws IOException
      */
@@ -68,17 +69,15 @@ public class Server implements Runnable{
         this.byteBuffer.clear();
     }
 
-
-
     @Override
     public void run() {
+
         try {
-            this.serverSocketChannel = ServerSocketChannel.open();
             SocketAddress inetSocketAddress = new InetSocketAddress(port);
             this.serverSocketChannel.bind(inetSocketAddress);
             this.serverSocketChannel.configureBlocking(false);
-            this.selector = Selector.open();
-            serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
+            this.serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
+            iServerLogger.serverStarting(this.port);
             while (true) {
                 selector.select();
                 for (SelectionKey k : selector.selectedKeys()) {
@@ -92,6 +91,5 @@ public class Server implements Runnable{
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 }
