@@ -11,11 +11,12 @@ import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.Charset;
 
-public class Server {
+public class Server implements Runnable{
 
     private ServerSocketChannel serverSocketChannel;
     private Selector selector;
-    private ByteBuffer byteBuffer = ByteBuffer.allocateDirect(512);
+    private ByteBuffer byteBuffer;
+    private int port;
 
     /**
      *
@@ -23,12 +24,10 @@ public class Server {
      * @throws IOException
      */
     public Server(int port) throws IOException {
-        this.serverSocketChannel = ServerSocketChannel.open();
-        SocketAddress inetSocketAddress = new InetSocketAddress(port);
-        this.serverSocketChannel.bind(inetSocketAddress);
-        this.serverSocketChannel.configureBlocking(false);
-        this.selector = Selector.open();
-        serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
+
+        this.port = port;
+        this.byteBuffer  = ByteBuffer.allocateDirect(512);
+
     }
 
     /**
@@ -69,20 +68,30 @@ public class Server {
         this.byteBuffer.clear();
     }
 
-    /**
-     *
-     * @throws IOException
-     */
-    public void start() throws IOException {
-        while (true) {
-            selector.select();
-            for (SelectionKey k : selector.selectedKeys()) {
-                if (k.isAcceptable())
-                    this.accept();
-                else
-                    this.repeat(k);
+
+
+    @Override
+    public void run() {
+        try {
+            this.serverSocketChannel = ServerSocketChannel.open();
+            SocketAddress inetSocketAddress = new InetSocketAddress(port);
+            this.serverSocketChannel.bind(inetSocketAddress);
+            this.serverSocketChannel.configureBlocking(false);
+            this.selector = Selector.open();
+            serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
+            while (true) {
+                selector.select();
+                for (SelectionKey k : selector.selectedKeys()) {
+                    if (k.isAcceptable())
+                        this.accept();
+                    else
+                        this.repeat(k);
+                }
+                selector.selectedKeys().clear();
             }
-            selector.selectedKeys().clear();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
     }
 }
