@@ -4,12 +4,14 @@ import java.util.ArrayList;
 
 public class Peer {
 	private String peerId;
+	private String peerPseudo;
 	private ArrayList<String> peersList;
 	private ArrayList<String> filesNames;
 	
-	public Peer(String peerId, ArrayList<String> peersList, ArrayList<String> filesNames) {
+	public Peer(String peerId, String peerPseudo, ArrayList<String> peersList, ArrayList<String> filesNames) {
 		super();
 		this.peerId = peerId;
+		this.peerPseudo = peerPseudo;
 		this.peersList = peersList;
 		this.filesNames = filesNames;
 	}
@@ -20,6 +22,14 @@ public class Peer {
 
 	public void setPeerId(String peerId) {
 		this.peerId = peerId;
+	}
+	
+	public String getPeerPseudo() {
+		return peerPseudo;
+	}
+
+	public void setPeerPseudo(String peerPseudo) {
+		this.peerPseudo = peerPseudo;
 	}
 
 	public ArrayList<String> getPeersList() {
