@@ -1,9 +1,11 @@
 package server;
 
+import server.core.handler.ClientHandler;
 import server.core.logger.IServerLogger;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
@@ -52,17 +54,24 @@ public class Server implements Runnable {
     public void repeat(SelectionKey key) throws IOException {
 
         SocketChannel sc = (SocketChannel) key.channel();
+
         sc.read(this.byteBuffer);
+
         this.byteBuffer.flip();
+
         Charset charset = Charset.forName("UTF-8");
+
         CharBuffer charBuffer = charset.decode(this.byteBuffer);
+
         iServerLogger.clientSentCommand(sc.getRemoteAddress().toString(),charBuffer.toString());
+
         for (SelectionKey k1 : selector.keys()) {
             if (k1.isAcceptable()) {
 
             } else {
                 SocketChannel socketChannel = (SocketChannel) k1.channel();
                 this.byteBuffer.rewind();
+
                 socketChannel.write(this.byteBuffer);
             }
         }
@@ -79,6 +88,15 @@ public class Server implements Runnable {
             this.serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
             iServerLogger.serverStarting(this.port);
             while (!stop) {
+ /*               SocketChannel socketChannel = serverSocketChannel.accept();
+                iServerLogger.clientConnected(socketChannel.getRemoteAddress().toString());
+
+                new Thread(new ClientHandler(socketChannel, iServerLogger)).start();
+
+*/
+
+
+
                 selector.select();
                 for (SelectionKey k : selector.selectedKeys()) {
                     if (k.isAcceptable())
@@ -87,6 +105,7 @@ public class Server implements Runnable {
                         this.repeat(k);
                 }
                 selector.selectedKeys().clear();
+
             }
         } catch (IOException e) {
             iServerLogger.systemMessage(e.getMessage());
