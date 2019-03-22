@@ -35,25 +35,32 @@ public class Deserialisation {
     }
 
     private void init(int id ) {
-        int n = this.byteBuffer.getInt();
-        int lim = this.byteBuffer.limit();
-        this.byteBuffer.limit(this.byteBuffer.position()+n);
-        String message = CHARSET.decode(this.byteBuffer).toString();
-        this.byteBuffer.limit(lim);
-        this.iClientLogger.connected(id,message);
+        this.iClientLogger.connected(id,this.getString());
 
     }
 
     private void listPairs(int id){
-        int nbPairs = this.byteBuffer.getInt();
+        this.iClientLogger.listSize(this.getInt());
         int lim = this.byteBuffer.limit();
-        System.out.println(nbPairs);
-            int p = this.byteBuffer.getInt();
-            int n = this.byteBuffer.getInt();
+            int p = this.getInt();
+            int n = this.getInt();
             this.byteBuffer.limit(this.byteBuffer.position()+n);
             String message = CHARSET.decode(this.byteBuffer).toString();
             this.byteBuffer.limit(lim);
-            this.iClientLogger.liste(id,p,message);
+            this.iClientLogger.list(id,p,message);
         byteBuffer.clear();
+    }
+
+    private int getInt(){
+        return this.byteBuffer.getInt();
+    }
+
+    private String getString(){
+        int stringSize = this.getInt();
+        int limit = this.byteBuffer.limit();
+        this.byteBuffer.limit(this.byteBuffer.position() + stringSize);
+        String message = CHARSET.decode(this.byteBuffer).toString();
+        this.byteBuffer.limit(limit);
+        return message;
     }
 }

@@ -36,20 +36,21 @@ public class Client implements Runnable{
 		}
 
 	}
-
+	boolean a = true;
 	private void start() throws IOException {
 		while (this.socketChannel.isConnected()){
-
 			socketChannel.read(this.byteBuffer);
 			this.byteBuffer.flip();
 			this.deserialisation.setByteBuffer(byteBuffer);
 			this.deserialisation.start();
 			this.byteBuffer.clear();
-
-			this.byteBuffer.put((byte)3);
-			this.byteBuffer.flip();
-			socketChannel.write(this.byteBuffer);
-			this.byteBuffer.clear();
+			if(a){
+				a=!a;
+				this.byteBuffer.put((byte)3);
+				this.byteBuffer.flip();
+				socketChannel.write(this.byteBuffer);
+				this.byteBuffer.clear();
+			}
 		}
 
 	}

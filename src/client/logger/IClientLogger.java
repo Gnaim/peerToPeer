@@ -7,7 +7,12 @@ public class IClientLogger implements Logger {
     }
 
     @Override
-    public void liste(int id, int port, String adr) {
+    public void listSize(int size) {
+        System.out.println("Size : [ "+ size +" ]");
+    }
+
+    @Override
+    public void list(int id, int port, String adr) {
         System.out.println("ID "+ id +" = [ " + port + " " +adr+ " ]");
     }
 
