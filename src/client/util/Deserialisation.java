@@ -29,7 +29,7 @@ public class Deserialisation {
                 break;
             case 3:
                 this.iClientLogger.command(id);
-                this.client.commandSendList();
+                this.client.commandSendListPeer();
                 this.client.commandGetList();
                 break;
             case 4:
@@ -37,7 +37,7 @@ public class Deserialisation {
                 break;
             case 5:
                 this.iClientLogger.command(id);
-
+                this.client.commandSendFileList();
                 this.client.commandGetFileList();
                 break;
             case 6:

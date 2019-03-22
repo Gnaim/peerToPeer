@@ -1,6 +1,7 @@
 package client.util;
 
 import client.Client;
+import client.File;
 import client.logger.IClientLogger;
 import client.peer.Peer;
 
@@ -38,6 +39,18 @@ public class Serializable {
             ByteBuffer buffer1 = CHARSET.encode(p.getAddress());
             this.byteBuffer.putInt(buffer1.remaining());
             this.byteBuffer.put(buffer1);
+        }
+        this.byteBuffer.flip();
+    }
+
+    public void commandFile(ArrayList<File> files){
+        this.byteBuffer.clear();
+        this.byteBuffer.put((byte) files.size());
+        for(File f : files){
+            ByteBuffer buffer1 = CHARSET.encode(f.getName());
+            this.byteBuffer.putInt(buffer1.remaining());
+            this.byteBuffer.put(buffer1);
+            this.byteBuffer.putLong((byte)f.getSize());
         }
         this.byteBuffer.flip();
     }

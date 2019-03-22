@@ -1,5 +1,6 @@
 package client;
 
+import client.folder.Folder;
 import client.logger.IClientLogger;
 import client.peer.Peer;
 import client.util.Deserialisation;
@@ -23,6 +24,7 @@ public class Client implements Runnable {
     private IClientLogger iClientLogger;
     private Serializable serializable;
     private ArrayList<Peer> peers;
+    private Folder folder;
 
 
     public Client(String serverAddress, int serverPort) {
@@ -33,6 +35,7 @@ public class Client implements Runnable {
         this.deserialisation = new Deserialisation(this);
         this.serializable = new Serializable(this);
         this.peers = new ArrayList<>();
+        this.folder = new Folder();
     }
 
     public SocketChannel getSocketChannel() {
@@ -63,30 +66,27 @@ public class Client implements Runnable {
 
     }
 
-    boolean a = true;
-
     private void start() throws IOException {
         while (this.socketChannel.isConnected()) {
             this.socketChannel.read(this.byteBuffer);
             this.deserialisation.start();
-            if (a) {
-                a = !a;
-                this.serializable.commandID(3);
-                this.socketChannel.write(this.byteBuffer);
-                this.byteBuffer.clear();
-            }
         }
     }
 
-
-    public void commandSendList(){
+    public void commandSendListPeer(){
         this.serializable.commandList(this.peers);
     }
+
+    public void commandSendFileList(){
+        this.serializable.commandFile(this.folder.listFilesForFolder());
+    }
+
     public void commandGetList()throws IOException{
         this.serializable.commandID(3);
         this.socketChannel.write(this.byteBuffer);
         this.byteBuffer.clear();
     }
+
     public void commandGetFileList() throws IOException {
         this.serializable.commandID(5);
         this.socketChannel.write(this.byteBuffer);
