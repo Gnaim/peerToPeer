@@ -60,8 +60,8 @@ public class Deserialisation {
         for (int i = 0; i < paire; i++) {
             var port = this.getInt();
             String address = this.getString();
-            this.client.getPeers().add(new Peer(port,address));
-            this.iClientLogger.listPeer(id,port,address);
+            this.client.getPeers().add(new Peer(port, address));
+            this.iClientLogger.listPeer(id, port, address);
         }
         byteBuffer.clear();
     }

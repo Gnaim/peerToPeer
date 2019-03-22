@@ -1,4 +1,4 @@
-package client;
+package client.folder;
 
 public class File {
     private String name;

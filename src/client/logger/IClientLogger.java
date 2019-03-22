@@ -38,7 +38,7 @@ public class IClientLogger implements Logger {
     @Override
     public void command(int id) {
         this.separator();
-        System.out.println("ID "+id);
+        System.out.println("ID " + id);
     }
 
     @Override
