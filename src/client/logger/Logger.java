@@ -13,4 +13,8 @@ public interface Logger {
     void listFile(int id, String nameFile, long sizeFile);
 
     void error(int id);
+
+    void command(int id);
+
+    void separator();
 }
