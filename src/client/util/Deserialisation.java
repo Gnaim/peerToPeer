@@ -40,14 +40,12 @@ public class Deserialisation {
     }
 
     private void listPairs(int id){
-        this.iClientLogger.listSize(this.getInt());
-        int lim = this.byteBuffer.limit();
-            int p = this.getInt();
-            int n = this.getInt();
-            this.byteBuffer.limit(this.byteBuffer.position()+n);
-            String message = CHARSET.decode(this.byteBuffer).toString();
-            this.byteBuffer.limit(lim);
-            this.iClientLogger.list(id,p,message);
+        int paire = this.getInt();
+        this.iClientLogger.listSize(paire);
+        for (int i=0; i< paire;i++){
+            this.iClientLogger.list(id,this.getInt(),this.getString());
+        }
+
         byteBuffer.clear();
     }
 
