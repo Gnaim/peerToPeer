@@ -20,45 +20,59 @@ public class Deserialisation {
     }
 
 
-    public void start(){
+    public void start() {
         int id = this.byteBuffer.get();
-        switch (id){
+        switch (id) {
             case 1:
-                  init(id);
+                init(id);
                 break;
             case 4:
                 listPairs(id);
+                break;
+            case 6:
+                listFile(id);
                 break;
             default:
                 this.iClientLogger.error(id);
         }
     }
 
-    private void init(int id ) {
-        this.iClientLogger.connected(id,this.getString());
+    private void init(int id) {
+        this.iClientLogger.connected(id, this.getString());
 
     }
 
-    private void listPairs(int id){
+    private void listPairs(int id) {
         int paire = this.getInt();
-        this.iClientLogger.listSize(paire);
-        for (int i=0; i< paire;i++){
-            this.iClientLogger.list(id,this.getInt(),this.getString());
+        this.iClientLogger.listLength(paire);
+        for (int i = 0; i < paire; i++) {
+            this.iClientLogger.listPeer(id, this.getInt(), this.getString());
         }
-
         byteBuffer.clear();
     }
 
-    private int getInt(){
+    private void listFile(int id) {
+        int nbFile = this.getInt();
+        this.iClientLogger.fileLength(nbFile);
+        for (int i = 0; i < nbFile; i++) {
+            this.iClientLogger.listFile(id, this.getString(), this.getLong());
+        }
+    }
+
+    private int getInt() {
         return this.byteBuffer.getInt();
     }
 
-    private String getString(){
+    private String getString() {
         int stringSize = this.getInt();
         int limit = this.byteBuffer.limit();
         this.byteBuffer.limit(this.byteBuffer.position() + stringSize);
         String message = CHARSET.decode(this.byteBuffer).toString();
         this.byteBuffer.limit(limit);
         return message;
+    }
+
+    private long getLong() {
+        return this.byteBuffer.getLong();
     }
 }

@@ -4,9 +4,13 @@ public interface Logger {
 
     void connected(int id, String message);
 
-    void listSize(int size);
+    void listLength(int size);
 
-    void list(int id, int port, String adr);
+    void fileLength(int size);
+
+    void listPeer(int id, int port, String adr);
+
+    void listFile(int id, String nameFile, long sizeFile);
 
     void error(int id);
-    }
+}
