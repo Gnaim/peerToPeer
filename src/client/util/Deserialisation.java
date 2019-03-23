@@ -48,9 +48,9 @@ public class Deserialisation {
             	this.iClientLogger.command(id);
                 this.client.commandGetFile("test2.c", 1757, 0, 1757); 
                 break;
-            /*case 8:
+            case 8:
                 file(id);
-                break;*/
+                break;
             default:
                 this.iClientLogger.error(id);
         }
