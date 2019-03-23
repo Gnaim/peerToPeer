@@ -44,9 +44,9 @@ public class Deserialisation {
                 this.listFile(id);
                 break;
             case 7:
-                this.iClientLogger.command(id);
-//                this.client.commandGetFile();
-                getFile(id);
+            	getFile(id);
+            	this.iClientLogger.command(id);
+                this.client.commandGetFile("test2.c", 1757, 0, 1757); 
                 break;
             /*case 8:
                 file(id);
@@ -90,9 +90,8 @@ public class Deserialisation {
         this.iClientLogger.file(id, fileName, sizeFile, pointer, fragment);
         this.byteBuffer.clear();
     }
-
+   
     private void file(int id){
-
         String fileName = getString();
         long sizeFile = getLong();
         long pointer = getLong();

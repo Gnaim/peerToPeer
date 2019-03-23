@@ -74,12 +74,13 @@ public class Client implements Runnable {
         while (this.socketChannel.isConnected()) {
             this.socketChannel.read(this.byteBuffer);
             this.deserialisation.start();
+            this.byteBuffer.clear();
         }
     }
 
     public void commandSendListPeer() throws IOException {
         this.serializable.commandPeerList(this.peers);
-//        this.writeOnSocketChannel();
+       this.writeOnSocketChannel();
     }
 
     public void commandSendFileList() throws IOException {
@@ -97,10 +98,11 @@ public class Client implements Runnable {
         this.writeOnSocketChannel();
     }
 
-    public void commandGetFile(String fileName, long sizeFile, long pointer, int fragment) throws IOException {
-        this.serializable.getFile(fileName, sizeFile, pointer, fragment);
+    
+    public void commandGetFile (String fileName, long sizeFile, long pointer, int fragment) throws IOException {
+    	System.out.println("( test )");
+    	this.serializable.askForFile(fileName, sizeFile, pointer, fragment);
         this.writeOnSocketChannel();
-
     }
 
     private void writeOnSocketChannel() throws IOException {

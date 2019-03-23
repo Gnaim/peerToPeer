@@ -60,7 +60,8 @@ public class Serializable {
     }
 
     public void getFile(String fileName, long sizeFile, long pointer, int fragment) {
-        this.sertlizeFileName(fileName,sizeFile,pointer,fragment);
+    	this.byteBuffer.clear();
+        this.byteBuffer.put((byte) 7);
         this.byteBuffer.flip();
     }
 
@@ -81,5 +82,19 @@ public class Serializable {
         this.byteBuffer.putLong(pointer);
         this.byteBuffer.putInt(fragment);
     }
+
+	public void askForFile(String fileName, long sizeFile, long pointer, int fragment) {
+		this.byteBuffer.clear();
+        this.byteBuffer.put((byte) 7);
+        ByteBuffer buffer1 = CHARSET.encode(fileName);
+        this.byteBuffer
+        				.putInt(buffer1.remaining())
+        				.put(buffer1)
+        				.putLong(sizeFile)
+        				.putLong(pointer)
+        				.putInt(fragment)
+        				.flip();
+        
+	}
 
 }
