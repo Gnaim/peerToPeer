@@ -25,8 +25,13 @@ public class IClientLogger implements Logger {
     }
 
     @Override
-    public void listFile(int id, String nameFile, long sizeFile) {
-        System.out.println("ID " + id + " = [ " + nameFile + " " + sizeFile + " ]");
+    public void listFile(int id, String fileName, long sizeFile) {
+        System.out.println("ID " + id + " = [ " + fileName + " " + sizeFile + " ]");
+    }
+
+    @Override
+    public void file(int id, String fileName, long sizeFile, long pointer, int fragment) {
+        System.out.println("ID " + id + " = [ " + fileName + ":" + sizeFile + " pointer :" + pointer + ", fragment: " + fragment + "]");
     }
 
     @Override

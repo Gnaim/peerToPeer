@@ -12,9 +12,12 @@ public interface Logger {
 
     void listFile(int id, String nameFile, long sizeFile);
 
+    void file(int id, String fileName, long sizeFile, long pointer, int fragment);
+
     void error(int id);
 
     void command(int id);
 
     void separator();
+    
 }

@@ -1,15 +1,17 @@
 package client.folder;
 
 import java.io.File;
+import java.nio.file.Paths;
+import java.sql.Blob;
 import java.util.ArrayList;
 
 public class Folder {
 
-    private String path = "/home/namrane/IdeaProjects/P2P file/src/client/src";
+    private static final String PATH = Paths.get(".").toAbsolutePath().normalize().toString()+"/src/client/src";
     private File folder;
 
     public Folder() {
-        this.folder = new File(path);
+        this.folder = new File(PATH);
     }
 
     public ArrayList<client.folder.File> listFilesForFolder() {
@@ -18,6 +20,12 @@ public class Folder {
             files.add(new client.folder.File(fileEntry.getName(), fileEntry.length()));
         }
         return files;
+    }
+
+    public Blob getFile(String file){
+        File files = new File(PATH+file);
+
+        return null;
     }
 
 
