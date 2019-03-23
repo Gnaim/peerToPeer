@@ -2,6 +2,8 @@ package server;
 
 import server.core.handler.ClientHandler;
 import server.core.logger.IServerLogger;
+import server.core.util.ServerDeserializer;
+import server.core.util.ServerSerializer;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -15,26 +17,38 @@ import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.Charset;
 
+import client.util.Deserialisation;
+import client.util.Serializable;
+
 public class Server implements Runnable {
 
+    private String adressIp;
     private ServerSocketChannel serverSocketChannel;
     private Selector selector;
     private ByteBuffer byteBuffer;
     private IServerLogger iServerLogger;
     private int port;
     private boolean stop;
+    private ServerSerializer serverSerializer;
+    private ServerDeserializer serverDeserializer;
 
     /**
      * @param port
      * @throws IOException
      */
-    public Server(int port) throws IOException {
+    public Server(int port,String adressIp) throws IOException {
         this.serverSocketChannel = ServerSocketChannel.open();
         this.port = port;
+        this.adressIp = adressIp;
         this.stop = false;
-        this.byteBuffer = ByteBuffer.allocateDirect(512);
+        this.byteBuffer = ByteBuffer.allocateDirect(65574);
         this.selector = Selector.open();
-        this.iServerLogger = new IServerLogger();
+        this.serverSerializer = new ServerSerializer(this);
+        this.iServerLogger = new IServerLogger();  
+    }
+    
+    public ByteBuffer getByteBuffer() {
+    	return this.byteBuffer;
     }
 
     /**
@@ -44,6 +58,8 @@ public class Server implements Runnable {
         SocketChannel socketChannel = serverSocketChannel.accept();
         socketChannel.configureBlocking(false);
         socketChannel.register(selector, SelectionKey.OP_READ);
+        this.commandMessage(socketChannel, "Reference Implementation 🚀");
+        this.commandSendIp(socketChannel,socketChannel.getRemoteAddress().toString());        
         iServerLogger.clientConnected(socketChannel.getRemoteAddress().toString());
     }
 
@@ -51,32 +67,6 @@ public class Server implements Runnable {
      * @param key
      * @throws IOException
      */
-    public void repeat(SelectionKey key) throws IOException {
-
-        SocketChannel sc = (SocketChannel) key.channel();
-
-        sc.read(this.byteBuffer);
-
-        this.byteBuffer.flip();
-
-        Charset charset = Charset.forName("UTF-8");
-
-        CharBuffer charBuffer = charset.decode(this.byteBuffer);
-
-        iServerLogger.clientSentCommand(sc.getRemoteAddress().toString(),charBuffer.toString());
-
-        for (SelectionKey k1 : selector.keys()) {
-            if (k1.isAcceptable()) {
-
-            } else {
-                SocketChannel socketChannel = (SocketChannel) k1.channel();
-                this.byteBuffer.rewind();
-
-                socketChannel.write(this.byteBuffer);
-            }
-        }
-        this.byteBuffer.clear();
-    }
 
     @Override
     public void run() {
@@ -88,22 +78,15 @@ public class Server implements Runnable {
             this.serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
             iServerLogger.serverStarting(this.port);
             while (!stop) {
- /*               SocketChannel socketChannel = serverSocketChannel.accept();
-                iServerLogger.clientConnected(socketChannel.getRemoteAddress().toString());
-
-                new Thread(new ClientHandler(socketChannel, iServerLogger)).start();
-
-*/
-
-
-
                 selector.select();
+
                 for (SelectionKey k : selector.selectedKeys()) {
                     if (k.isAcceptable())
                         this.accept();
                     else
-                        this.repeat(k);
+                        this.transmition(k);
                 }
+
                 selector.selectedKeys().clear();
 
             }
@@ -111,6 +94,7 @@ public class Server implements Runnable {
             iServerLogger.systemMessage(e.getMessage());
         }
     }
+    
 
     public synchronized void finish() {
         this.stop = true;
@@ -121,5 +105,32 @@ public class Server implements Runnable {
         }
         iServerLogger.serverClosing();
     }
+    
+    private void transmition (SelectionKey key) throws IOException {
+    	SocketChannel clientSocket = (SocketChannel) key.channel();
+    	clientSocket.read(this.byteBuffer);
+    	this.byteBuffer.flip();
+    	while(clientSocket.isConnected()) {
+    		// protocol management
+    	}
+    }
+    private void writeOnSocketChannel(SocketChannel socketChannel) throws IOException {
+    	socketChannel.write(this.byteBuffer);
+        this.byteBuffer.clear();
+    }
 
+    public void commandMessage(SocketChannel socketChannel, String message) throws IOException {
+        this.serverSerializer.sendMessage(message);
+        this.writeOnSocketChannel(socketChannel);
+    }
+
+    public void commandSendIp(SocketChannel socketChannel, String ip) throws IOException {
+        this.serverSerializer.sendIp("You are connected from "+this.adressIp+ip);
+        this.writeOnSocketChannel(socketChannel);
+    }
+    
+    public void commandGetList(SocketChannel socketChannel) throws IOException {
+        this.serverSerializer.commandID(3);
+        this.writeOnSocketChannel(socketChannel);
+    }
 }
