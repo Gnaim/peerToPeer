@@ -45,8 +45,12 @@ public class Deserialisation {
                 break;
             case 7:
                 this.iClientLogger.command(id);
+//                this.client.commandGetFile();
                 getFile(id);
                 break;
+            /*case 8:
+                file(id);
+                break;*/
             default:
                 this.iClientLogger.error(id);
         }
@@ -87,6 +91,23 @@ public class Deserialisation {
         this.byteBuffer.clear();
     }
 
+    private void file(int id){
+
+        String fileName = getString();
+        long sizeFile = getLong();
+        long pointer = getLong();
+        int fragment = getInt();
+        this.iClientLogger.file(id, fileName, sizeFile, pointer, fragment);
+
+        int limit = this.byteBuffer.limit();
+        this.byteBuffer.limit(this.byteBuffer.position() + fragment);
+        String message = CHARSET.decode(this.byteBuffer).toString();
+        this.byteBuffer.limit(limit);
+        System.out.println(message);
+        this.byteBuffer.clear();
+
+    }
+
 
     private int getInt() {
         return this.byteBuffer.getInt();
@@ -104,4 +125,5 @@ public class Deserialisation {
     private long getLong() {
         return this.byteBuffer.getLong();
     }
+
 }

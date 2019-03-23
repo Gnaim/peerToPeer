@@ -15,10 +15,12 @@ import java.util.ArrayList;
 public class Serializable {
     public static final Charset CHARSET = Charset.forName("UTF-8");
     private ByteBuffer byteBuffer;
+    private Client client;
     private IClientLogger iClientLogger;
     private SocketChannel socketChannel;
 
     public Serializable(Client client) {
+        this.client = client;
         this.byteBuffer = client.getByteBuffer();
         this.iClientLogger = client.getiClientLogger();
         this.socketChannel = client.getSocketChannel();
@@ -64,6 +66,7 @@ public class Serializable {
 
     public void file(String fileName, long sizeFile, long pointer, int fragment, Blob blob) {
         this.sertlizeFileName(fileName,sizeFile,pointer,fragment);
+
         //TODO : blob serlize
 
     }

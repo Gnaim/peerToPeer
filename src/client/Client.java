@@ -54,6 +54,10 @@ public class Client implements Runnable {
         return peers;
     }
 
+    public Folder getFolder() {
+        return folder;
+    }
+
     public void run() {
         try {
             this.socketAddress = new InetSocketAddress(this.serverAddress, this.serverPort);

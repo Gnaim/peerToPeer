@@ -1,6 +1,7 @@
 package client.folder;
 
 import java.io.File;
+import java.sql.Blob;
 import java.util.ArrayList;
 
 public class Folder {
@@ -18,6 +19,12 @@ public class Folder {
             files.add(new client.folder.File(fileEntry.getName(), fileEntry.length()));
         }
         return files;
+    }
+
+    public Blob getFile(String file){
+        File files = new File(path+file);
+
+        return null;
     }
 
 
