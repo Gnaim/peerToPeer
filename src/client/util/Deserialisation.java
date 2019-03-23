@@ -92,7 +92,7 @@ public class Deserialisation {
         this.byteBuffer.clear();
     }
    
-    private void file(int id){
+    private void file(int id) throws IOException{
         String fileName = getString();
         long sizeFile = getLong();
         long pointer = getLong();
@@ -103,7 +103,8 @@ public class Deserialisation {
         this.byteBuffer.limit(this.byteBuffer.position() + fragment);
         String message = CHARSET.decode(this.byteBuffer).toString();
         this.byteBuffer.limit(limit);
-        System.out.println(message);
+        //System.out.println(message);
+        this.client.getFolder().ceateFile(fileName, message);
         this.byteBuffer.clear();
 
     }

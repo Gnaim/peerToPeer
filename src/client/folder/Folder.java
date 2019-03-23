@@ -1,6 +1,9 @@
 package client.folder;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.file.Paths;
 import java.sql.Blob;
 import java.util.ArrayList;
@@ -28,5 +31,13 @@ public class Folder {
         return null;
     }
 
+    public void ceateFile(String nameFile,String c) throws IOException {
+        FileOutputStream fos = new FileOutputStream(PATH+"/"+nameFile);
+        fos.write(c.getBytes());
+        fos.flush();
+        fos.close();
+	
+    }
+    
 
 }
