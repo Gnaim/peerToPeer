@@ -28,41 +28,46 @@ public class Serializable {
     }
 
     public void commandID(int ID) throws IOException {
-        this.byteBuffer.clear();
-        this.byteBuffer.put((byte) ID);
-        this.byteBuffer.flip();
+        this.byteBuffer
+        	.clear()
+        	.put((byte) ID)
+        	.flip();
     }
 
     public void commandPeerList(ArrayList<Peer> peer) {
-        this.byteBuffer.clear();
-        this.byteBuffer.put((byte) 4);
-        this.byteBuffer.putInt(peer.size());
+        this.byteBuffer.clear()
+        	.put((byte) 4)
+        	.putInt(peer.size());
         for (Peer p : peer) {
             this.byteBuffer.putInt(p.getPort());
             ByteBuffer buffer1 = CHARSET.encode(p.getAddress());
-            this.byteBuffer.putInt(buffer1.remaining());
-            this.byteBuffer.put(buffer1);
+            this.byteBuffer
+            	.putInt(buffer1.remaining())
+            	.put(buffer1);
         }
         this.byteBuffer.flip();
     }
 
     public void commandFileList(ArrayList<File> files) {
-        this.byteBuffer.clear();
-        this.byteBuffer.put((byte) 6);
-        this.byteBuffer.putInt(files.size());
+        this.byteBuffer
+        	.clear()
+        	.put((byte) 6)
+        	.putInt(files.size());
         for (File f : files) {
             ByteBuffer buffer1 = CHARSET.encode(f.getName());
-            this.byteBuffer.putInt(buffer1.remaining());
-            this.byteBuffer.put(buffer1);
-            this.byteBuffer.putLong(f.getSize());
+            this.byteBuffer
+            	.putInt(buffer1.remaining())
+            	.put(buffer1)
+            	.putLong(f.getSize());
         }
         this.byteBuffer.flip();
     }
 
     public void getFile(String fileName, long sizeFile, long pointer, int fragment) {
-    	this.byteBuffer.clear();
-        this.byteBuffer.put((byte) 7);
-        this.byteBuffer.flip();
+    	this.byteBuffer
+    		.clear()
+    		.put((byte) 7)
+    		.flip();
     }
 
     public void file(String fileName, long sizeFile, long pointer, int fragment, Blob blob) {
@@ -73,27 +78,30 @@ public class Serializable {
     }
 
     private void sertlizeFileName(String fileName, long sizeFile, long pointer, int fragment) {
-        this.byteBuffer.clear();
-        this.byteBuffer.put((byte) 7);
+        this.byteBuffer
+        	.clear()
+        	.put((byte) 7);
         ByteBuffer buffer1 = Deserialisation.CHARSET.encode(fileName);
-        this.byteBuffer.putInt(buffer1.remaining());
-        this.byteBuffer.put(buffer1);
-        this.byteBuffer.putLong(sizeFile);
-        this.byteBuffer.putLong(pointer);
-        this.byteBuffer.putInt(fragment);
+        this.byteBuffer
+        	.putInt(buffer1.remaining())
+        	.put(buffer1)
+        	.putLong(sizeFile)
+        	.putLong(pointer)
+        	.putInt(fragment);
     }
 
 	public void askForFile(String fileName, long sizeFile, long pointer, int fragment) {
-		this.byteBuffer.clear();
-        this.byteBuffer.put((byte) 7);
+		this.byteBuffer
+			.clear()
+			.put((byte) 7);
         ByteBuffer buffer1 = CHARSET.encode(fileName);
         this.byteBuffer
-        				.putInt(buffer1.remaining())
-        				.put(buffer1)
-        				.putLong(sizeFile)
-        				.putLong(pointer)
-        				.putInt(fragment)
-        				.flip();
+        	.putInt(buffer1.remaining())
+        	.put(buffer1)
+        	.putLong(sizeFile)
+        	.putLong(pointer)
+        	.putInt(fragment)
+        	.flip();
         
 	}
 
