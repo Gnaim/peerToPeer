@@ -30,11 +30,12 @@ public class Serializable {
         this.byteBuffer.flip();
     }
 
-    public void commandList(ArrayList<Peer> peer) {
+    public void commandPeerList(ArrayList<Peer> peer) {
         this.byteBuffer.clear();
-        this.byteBuffer.put((byte) peer.size());
+        this.byteBuffer.put((byte) 4);
+        this.byteBuffer.putInt(peer.size());
         for (Peer p : peer) {
-            this.byteBuffer.putInt((byte) p.getPort());
+            this.byteBuffer.putInt(p.getPort());
             ByteBuffer buffer1 = CHARSET.encode(p.getAddress());
             this.byteBuffer.putInt(buffer1.remaining());
             this.byteBuffer.put(buffer1);
@@ -42,17 +43,29 @@ public class Serializable {
         this.byteBuffer.flip();
     }
 
-    public void commandFile(ArrayList<File> files) {
+    public void commandFileList(ArrayList<File> files) {
         this.byteBuffer.clear();
-        this.byteBuffer.put((byte) files.size());
+        this.byteBuffer.put((byte) 6);
+        this.byteBuffer.putInt(files.size());
         for (File f : files) {
             ByteBuffer buffer1 = CHARSET.encode(f.getName());
             this.byteBuffer.putInt(buffer1.remaining());
             this.byteBuffer.put(buffer1);
-            this.byteBuffer.putLong((byte) f.getSize());
+            this.byteBuffer.putLong(f.getSize());
         }
         this.byteBuffer.flip();
     }
 
+    public void getFile(String fileName, long sizeFile, long pointer, int fragment) {
+        this.byteBuffer.clear();
+        this.byteBuffer.put((byte) 7);
+        ByteBuffer buffer1 = Deserialisation.CHARSET.encode(fileName);
+        this.byteBuffer.putInt(buffer1.remaining());
+        this.byteBuffer.put(buffer1);
+        this.byteBuffer.putLong(sizeFile);
+        this.byteBuffer.putLong(pointer);
+        this.byteBuffer.putInt(fragment);
+        this.byteBuffer.flip();
+    }
 
 }

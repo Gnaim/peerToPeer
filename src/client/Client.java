@@ -15,6 +15,7 @@ import java.util.ArrayList;
 
 
 public class Client implements Runnable {
+    boolean a = true;
     private int serverPort;
     private String serverAddress;
     private SocketChannel socketChannel;
@@ -25,7 +26,6 @@ public class Client implements Runnable {
     private Serializable serializable;
     private ArrayList<Peer> peers;
     private Folder folder;
-
 
     public Client(String serverAddress, int serverPort) {
         this.serverPort = serverPort;
@@ -57,7 +57,7 @@ public class Client implements Runnable {
     public void run() {
         try {
             this.socketAddress = new InetSocketAddress(this.serverAddress, this.serverPort);
-            this.socketChannel = this.socketChannel.open();
+            this.socketChannel = SocketChannel.open();
             this.socketChannel.connect(this.socketAddress);
             this.start();
         } catch (IOException e) {
@@ -73,22 +73,33 @@ public class Client implements Runnable {
         }
     }
 
-    public void commandSendListPeer(){
-        this.serializable.commandList(this.peers);
+    public void commandSendListPeer() throws IOException {
+        this.serializable.commandPeerList(this.peers);
+//        this.writeOnSocketChannel();
     }
 
-    public void commandSendFileList(){
-        this.serializable.commandFile(this.folder.listFilesForFolder());
+    public void commandSendFileList() throws IOException {
+        this.serializable.commandFileList(this.folder.listFilesForFolder());
+        this.writeOnSocketChannel();
     }
 
-    public void commandGetList()throws IOException{
+    public void commandGetList() throws IOException {
         this.serializable.commandID(3);
-        this.socketChannel.write(this.byteBuffer);
-        this.byteBuffer.clear();
+        this.writeOnSocketChannel();
     }
 
     public void commandGetFileList() throws IOException {
         this.serializable.commandID(5);
+        this.writeOnSocketChannel();
+    }
+
+    public void commandGetFile(String fileName, long sizeFile, long pointer, int fragment) throws IOException {
+        this.serializable.getFile(fileName, sizeFile, pointer, fragment);
+        this.writeOnSocketChannel();
+
+    }
+
+    private void writeOnSocketChannel() throws IOException {
         this.socketChannel.write(this.byteBuffer);
         this.byteBuffer.clear();
     }

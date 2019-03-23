@@ -29,8 +29,8 @@ public class Deserialisation {
                 break;
             case 3:
                 this.iClientLogger.command(id);
-                this.client.commandSendListPeer();
                 this.client.commandGetList();
+                this.client.commandSendListPeer();
                 break;
             case 4:
                 this.listPairs(id);
@@ -42,6 +42,10 @@ public class Deserialisation {
                 break;
             case 6:
                 this.listFile(id);
+                break;
+            case 7:
+                this.iClientLogger.command(id);
+                getFile(id);
                 break;
             default:
                 this.iClientLogger.error(id);
@@ -73,6 +77,16 @@ public class Deserialisation {
             this.iClientLogger.listFile(id, this.getString(), this.getLong());
         }
     }
+
+    private void getFile(int id) {
+        String fileName = getString();
+        long sizeFile = getLong();
+        long pointer = getLong();
+        int fragment = getInt();
+        this.iClientLogger.file(id, fileName, sizeFile, pointer, fragment);
+        this.byteBuffer.clear();
+    }
+
 
     private int getInt() {
         return this.byteBuffer.getInt();
