@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.Charset;
+import java.sql.Blob;
 import java.util.ArrayList;
 
 public class Serializable {
@@ -57,6 +58,17 @@ public class Serializable {
     }
 
     public void getFile(String fileName, long sizeFile, long pointer, int fragment) {
+        this.sertlizeFileName(fileName,sizeFile,pointer,fragment);
+        this.byteBuffer.flip();
+    }
+
+    public void file(String fileName, long sizeFile, long pointer, int fragment, Blob blob) {
+        this.sertlizeFileName(fileName,sizeFile,pointer,fragment);
+        //TODO : blob serlize
+
+    }
+
+    private void sertlizeFileName(String fileName, long sizeFile, long pointer, int fragment) {
         this.byteBuffer.clear();
         this.byteBuffer.put((byte) 7);
         ByteBuffer buffer1 = Deserialisation.CHARSET.encode(fileName);
@@ -65,7 +77,6 @@ public class Serializable {
         this.byteBuffer.putLong(sizeFile);
         this.byteBuffer.putLong(pointer);
         this.byteBuffer.putInt(fragment);
-        this.byteBuffer.flip();
     }
 
 }
