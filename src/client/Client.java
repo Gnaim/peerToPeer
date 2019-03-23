@@ -97,10 +97,14 @@ public class Client implements Runnable {
         this.serializable.commandID(5);
         this.writeOnSocketChannel();
     }
-
+    
+    public void commandSendPort(int port)throws IOException {
+    	this.serializable.sendPort(port);
+    	this.writeOnSocketChannel();
+    }
     
     public void commandGetFile (String fileName, long sizeFile, long pointer, int fragment) throws IOException {
-    	System.out.println("( test )");
+    	this.iClientLogger.file(7, fileName, sizeFile, pointer, fragment);
     	this.serializable.askForFile(fileName, sizeFile, pointer, fragment);
         this.writeOnSocketChannel();
     }
@@ -109,4 +113,5 @@ public class Client implements Runnable {
         this.socketChannel.write(this.byteBuffer);
         this.byteBuffer.clear();
     }
+    
 }

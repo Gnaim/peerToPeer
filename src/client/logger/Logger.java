@@ -19,4 +19,5 @@ public interface Logger {
     void command(int id);
 
     void separator();
+    
 }

@@ -26,6 +26,7 @@ public class Deserialisation {
         switch (id) {
             case 1:
                 this.message(id);
+                this.client.commandSendPort(2222);
                 break;
             case 3:
                 this.iClientLogger.command(id);
