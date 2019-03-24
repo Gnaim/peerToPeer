@@ -1,6 +1,6 @@
-package client.logger;
+package peer.logger;
 
-public class IClientLogger implements Logger {
+public class IClientLogger implements ClientLogger {
     @Override
     public void connected(int id, String message) {
         this.separator();
@@ -45,7 +45,6 @@ public class IClientLogger implements Logger {
         this.separator();
         System.out.println("ID " + id);
     }
-
     @Override
     public void separator() {
         System.out.println("-------------------------------");

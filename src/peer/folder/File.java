@@ -1,4 +1,4 @@
-package client.folder;
+package peer.folder;
 
 public class File {
     private String name;

@@ -1,6 +1,6 @@
-package client.logger;
+package peer.logger;
 
-public interface Logger {
+public interface ClientLogger {
 
     void connected(int id, String message);
 
