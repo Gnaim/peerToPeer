@@ -1,12 +1,14 @@
-package client.util;
+package peer.util;
 
-import client.Client;
-import client.logger.IClientLogger;
-import client.peer.Peer;
+
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
+
+import peer.Client;
+import peer.logger.IClientLogger;
+import peer.peer.Peer;
 
 public class Deserialisation {
     public static final Charset CHARSET = Charset.forName("UTF-8");

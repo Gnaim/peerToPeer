@@ -1,6 +1,6 @@
-package server.core.logger;
+package peer.logger;
 
-public interface Logger {
+public interface ServerLogger {
     void serverStarting(int port);
 
     void serverClosing();

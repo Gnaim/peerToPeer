@@ -1,8 +1,6 @@
-import client.Client;
-import client.folder.Folder;
-import server.Server;
-
 import java.io.IOException;
+
+import peer.Client;
 
 public class LocalTest {
 

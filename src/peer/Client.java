@@ -1,10 +1,4 @@
-package client;
-
-import client.folder.Folder;
-import client.logger.IClientLogger;
-import client.peer.Peer;
-import client.util.Deserialisation;
-import client.util.Serializable;
+package peer;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -12,6 +6,12 @@ import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
+
+import peer.folder.Folder;
+import peer.logger.IClientLogger;
+import peer.util.Deserialisation;
+import peer.util.Serializable;
+import peer.peer.Peer;
 
 
 public class Client implements Runnable {
@@ -33,7 +33,7 @@ public class Client implements Runnable {
         this.byteBuffer = ByteBuffer.allocate(9000);
         this.iClientLogger = new IClientLogger();
         this.deserialisation = new Deserialisation(this);
-        this.serializable = new Serializable(this);
+        this.serializable = new Serializable(this.byteBuffer);
         this.peers = new ArrayList<>();
         this.folder = new Folder();
     }

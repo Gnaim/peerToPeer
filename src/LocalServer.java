@@ -1,13 +1,14 @@
-import client.Client;
-import server.Server;
 
 import java.io.IOException;
+
+import peer.Server;
+
 
 public class LocalServer {
 
     public static void main(String[] args) throws IOException {
     	new Thread(
-               new Server(2222,"MyLocalServer")
+               new Server("MyLocalServer",2222)
         ).start();
 
     }

@@ -1,6 +1,6 @@
-package client.logger;
+package peer.logger;
 
-public class IClientLogger implements Logger {
+public class IClientLogger implements ClientLogger {
     @Override
     public void connected(int id, String message) {
         this.separator();

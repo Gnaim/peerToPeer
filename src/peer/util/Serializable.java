@@ -1,9 +1,9 @@
-package client.util;
+package peer.util;
 
-import client.Client;
-import client.folder.File;
-import client.logger.IClientLogger;
-import client.peer.Peer;
+import peer.Client;
+import peer.folder.File;
+import peer.logger.IClientLogger;
+import peer.peer.Peer;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -21,8 +21,8 @@ public class Serializable {
      * 
      * @param client
      */
-    public Serializable(Client client) {
-        this.byteBuffer = client.getByteBuffer();
+    public Serializable(ByteBuffer byteBuffer) {
+        this.byteBuffer = byteBuffer;
     }
     
     /**
@@ -153,5 +153,27 @@ public class Serializable {
         	.flip();
         
 	}
+	
+	public void sendMessage(String message) {
+		this.byteBuffer
+			.clear()
+			.put((byte)1);
+		ByteBuffer buffer = CHARSET.encode(message);
+		this.byteBuffer
+			.putInt(buffer.remaining())
+			.put(buffer)
+			.flip();	
+	}
+	
+	public void sendIp(String ip) throws IOException {
+    	this.byteBuffer
+    		.clear()
+    		.put((byte)1);
+        ByteBuffer buffer = CHARSET.encode(ip);
+        this.byteBuffer
+        	.putInt(buffer.remaining())
+        	.put(buffer)
+        	.flip();
+    }
 
 }

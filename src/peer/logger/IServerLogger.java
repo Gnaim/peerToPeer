@@ -1,6 +1,6 @@
-package server.core.logger;
+package peer.logger;
 
-public class IServerLogger implements Logger {
+public class IServerLogger implements ServerLogger {
 
     @Override
     public void serverStarting(int port) {

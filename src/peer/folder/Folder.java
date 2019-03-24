@@ -1,4 +1,4 @@
-package client.folder;
+package peer.folder;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -10,17 +10,17 @@ import java.util.ArrayList;
 
 public class Folder {
 
-    private static final String PATH = Paths.get(".").toAbsolutePath().normalize().toString()+"/src/client/src";
+    private static final String PATH = Paths.get(".").toAbsolutePath().normalize().toString()+"/src/peer/src";
     private File folder;
 
     public Folder() {
         this.folder = new File(PATH);
     }
 
-    public ArrayList<client.folder.File> listFilesForFolder() {
-        ArrayList<client.folder.File> files = new ArrayList<>();
+    public ArrayList<peer.folder.File> listFilesForFolder() {
+        ArrayList<peer.folder.File> files = new ArrayList<>();
         for (final File fileEntry : folder.listFiles()) {
-            files.add(new client.folder.File(fileEntry.getName(), fileEntry.length()));
+            files.add(new peer.folder.File(fileEntry.getName(), fileEntry.length()));
         }
         return files;
     }
