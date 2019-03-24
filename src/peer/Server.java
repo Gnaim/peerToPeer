@@ -1,19 +1,14 @@
 package peer;
 
-
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.net.Socket;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
-
 import peer.folder.Folder;
 import peer.logger.IServerLogger;
 import peer.peer.Peer;
@@ -30,12 +25,12 @@ public class Server implements Runnable {
     private int port;
     private boolean stop;
     private Serializable serverSerializer;
-    private Deserialisation deserialisation;
+    private Deserialisation serverDeserializer;
     private ArrayList<Peer> peers;
     private Folder folder;
  
     /**
-     * @param port
+     * @param port, adressIp
      * @throws IOException
      */
     public Server(String adressIp,int port) throws IOException {
@@ -49,6 +44,10 @@ public class Server implements Runnable {
         this.iServerLogger = new IServerLogger();  
         this.peers = new ArrayList<>();
         this.folder = new Folder();
+        SocketAddress inetSocketAddress = new InetSocketAddress(port);
+        this.serverSocketChannel.bind(inetSocketAddress);
+        this.serverSocketChannel.configureBlocking(false);
+        this.serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
 
     }
     
@@ -60,34 +59,26 @@ public class Server implements Runnable {
      * @throws IOException
      */
     public void accept() throws IOException {
-        SocketChannel socketChannel = serverSocketChannel.accept();
-        socketChannel.configureBlocking(false);
-        socketChannel.register(selector, SelectionKey.OP_READ);
-        this.commandMessage(socketChannel, "Reference Implementation 🚀");
-        this.commandSendIp(socketChannel,socketChannel.getRemoteAddress().toString());
+    	this.byteBuffer.clear();
+		SocketChannel socketChannel = serverSocketChannel.accept();
+        this.commandMessage(socketChannel, "Reference Implementation 🚀 ");
+        this.commandSendIp(socketChannel, socketChannel.getRemoteAddress().toString()); 
+		socketChannel.configureBlocking(false);
+		socketChannel.register(selector, SelectionKey.OP_READ);
         iServerLogger.clientConnected(socketChannel.getRemoteAddress().toString());
     }
-
-    /**
-     * @param key
-     * @throws IOException
-     */
 
     @Override
     public void run() {
 
         try {
-            SocketAddress inetSocketAddress = new InetSocketAddress(port);
-            this.serverSocketChannel.bind(inetSocketAddress);
-            this.serverSocketChannel.configureBlocking(false);
-            this.serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
             iServerLogger.serverStarting(this.port);
             while (!stop) {
                 selector.select();
 
                 for (SelectionKey k : selector.selectedKeys()) {
                     if (k.isAcceptable())
-                        this.accept();
+	                        this.accept();
                     else
                         this.transmition(k);
                 }
@@ -111,19 +102,66 @@ public class Server implements Runnable {
         iServerLogger.serverClosing();
     }
     
+
     private void transmition (SelectionKey key) throws IOException {
+    	System.out.println("transmission");
     	SocketChannel clientSocket = (SocketChannel) key.channel();
-    	clientSocket.read(this.byteBuffer);
-    	this.byteBuffer.flip();
     	
     	while(clientSocket.isConnected()) {
-    /*		int id = this.byteBuffer.get();
-    		 switch (id) {
-    		 		//	Manage Protocol or using Deserilization
-    		 }
-    */
-    	}
+    		byteBuffer.clear();
+			if (this.receiveMessage (clientSocket)) {
+				byteBuffer.flip();
+				String adressIp = clientSocket.getRemoteAddress().toString();
+				int id = byteBuffer.get();
+				this.iServerLogger.clientSentCommand(adressIp, Integer.toString(id));
+				byteBuffer.clear();
+				  switch (id) {
+		            case 2: 
+		            	commandGetPort(clientSocket,byteBuffer);
+		                break;
+		            case 3: 
+		            	sendPeersList(clientSocket,byteBuffer);
+		                break;
+		            case 5:
+		            	sendFilesList(clientSocket,byteBuffer);
+		                break;
+		            case 7:
+		            	sendFragmentFile(clientSocket,byteBuffer);
+		                break;
+		                
+				  }
+			}
+		}
+		
+    }
+    	
+    private void commandGetPort(SocketChannel clientSocket,ByteBuffer byteBuffer) throws IOException {
+    	int port =byteBuffer.getInt();
+    	String adressIp = clientSocket.getRemoteAddress().toString();
+    	this.peers.add(new Peer(port,adressIp));
+    	System.out.println("Peers added succefully");
+    	this.byteBuffer.clear();
+    }
+    private void sendPeersList(SocketChannel clientSocket,ByteBuffer byteBuffer) {
+    	
+    	this.byteBuffer.clear();
+    }
+    private void sendFilesList(SocketChannel clientSocket,ByteBuffer byteBuffer) {
+    	
+    	this.byteBuffer.clear();
+    }
+    private void sendFragmentFile(SocketChannel clientSocket,ByteBuffer byteBuffer) {
+    	
+    	this.byteBuffer.clear();
+    }
    
+    
+    private boolean receiveMessage (SocketChannel clientSocket) throws IOException {
+    	return clientSocket.read( this.byteBuffer) > 0;
+    }
+    public void SendPeersList(SocketChannel socketChannel) throws IOException {
+ //      this.serializable.commandPeerList(this.peers);
+ //      this.writeOnSocketChannel();
     }
     private void writeOnSocketChannel(SocketChannel socketChannel) throws IOException {
     	socketChannel.write(this.byteBuffer);
@@ -132,11 +170,15 @@ public class Server implements Runnable {
 
     public void commandMessage(SocketChannel socketChannel, String message) throws IOException {
         this.serverSerializer.sendMessage(message);
-        this.writeOnSocketChannel(socketChannel);
+        this.writeOnSocketChannel(socketChannel); 
     }
 
+    public void commandId(SocketChannel socketChannel, int id) throws IOException {
+        this.serverSerializer.commandID(id);
+        this.writeOnSocketChannel(socketChannel);
+    }
     public void commandSendIp(SocketChannel socketChannel, String ip) throws IOException {
-        this.serverSerializer.sendIp("You are connected from "+this.adressIp+ip);
+        this.serverSerializer.sendMessage("You are connected from "+this.adressIp+ip);
         this.writeOnSocketChannel(socketChannel);
     }
     
