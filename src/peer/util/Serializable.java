@@ -165,15 +165,14 @@ public class Serializable {
 			.flip();	
 	}
 	
-	public void sendIp(String ip) throws IOException {
-    	this.byteBuffer
-    		.clear()
-    		.put((byte)1);
-        ByteBuffer buffer = CHARSET.encode(ip);
-        this.byteBuffer
-        	.putInt(buffer.remaining())
-        	.put(buffer)
-        	.flip();
-    }
-
+	public void sendIp(String serverName,String ip) {
+		this.byteBuffer
+			.clear()
+			.put((byte)1);
+		ByteBuffer buffer = CHARSET.encode("You are connected from: "+serverName +ip);
+		this.byteBuffer
+			.putInt(buffer.remaining())
+			.put(buffer)
+			.flip();	
+	}
 }

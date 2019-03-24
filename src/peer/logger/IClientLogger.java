@@ -45,7 +45,6 @@ public class IClientLogger implements ClientLogger {
         this.separator();
         System.out.println("ID " + id);
     }
-
     @Override
     public void separator() {
         System.out.println("-------------------------------");
