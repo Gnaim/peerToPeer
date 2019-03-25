@@ -1,4 +1,4 @@
-package peer.logger;
+package peer.core.logger;
 
 public interface ServerLogger {
     void serverStarting(int port);

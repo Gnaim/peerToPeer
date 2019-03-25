@@ -1,4 +1,4 @@
-package peer.peer;
+package peer.core.peer;
 
 public class Peer {
     private int port;

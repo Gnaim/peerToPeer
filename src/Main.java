@@ -8,9 +8,9 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
     	
-    	 new Thread(
+    	/* new Thread(
                new Server("LocalServer" ,2222)
-        ).start();
+        ).start();*/
 
         new Thread(
                 //   new Client("176-132-200-49.abo.bbox.fr",8080)

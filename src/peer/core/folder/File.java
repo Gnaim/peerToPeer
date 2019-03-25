@@ -1,4 +1,4 @@
-package peer.folder;
+package peer.core.folder;
 
 public class File {
     private String name;
