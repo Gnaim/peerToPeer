@@ -172,7 +172,7 @@ public class Server implements Runnable {
     }
 
     public void commandMessage(SocketChannel socketChannel, String message) throws IOException {
-        this.serverSerializer.sendMessage(message);
+        //this.serverSerializer.sendMessage(message);
         this.writeOnSocketChannel(socketChannel); 
     }
 
