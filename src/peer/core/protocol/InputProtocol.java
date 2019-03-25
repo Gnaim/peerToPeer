@@ -1,13 +1,14 @@
-package peer.protocol;
+package peer.core.protocol;
 
 
-import peer.folder.File;
-import peer.peer.Peer;
+import peer.core.folder.File;
+import peer.core.peer.Peer;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
 public interface InputProtocol {
+
     /**
      *
      * @param id : ID = 1

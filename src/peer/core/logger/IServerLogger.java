@@ -1,6 +1,8 @@
-package peer.logger;
+package peer.core.logger;
 
-public class IServerLogger implements ServerLogger {
+
+
+public class IServerLogger implements ServerLogger  {
 
     @Override
     public void serverStarting(int port) {
@@ -25,7 +27,7 @@ public class IServerLogger implements ServerLogger {
 
     @Override
     public void clientConnected(String ip) {
-        System.out.println("client: [" + ip.split("/")[1] + "] connected");
+        System.out.println("client: [" + ip.split("/")[1] + "] message");
     }
     
     @Override
@@ -55,5 +57,6 @@ public class IServerLogger implements ServerLogger {
 		
 	}
 
-    
+
+
 }

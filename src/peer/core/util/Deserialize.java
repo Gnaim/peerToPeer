@@ -1,30 +1,24 @@
-package peer.util;
+package peer.core.util;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 
-import peer.Client;
-import peer.folder.File;
-import peer.logger.IClientLogger;
-import peer.peer.Peer;
-import peer.protocol.InputProtocol;
+import peer.core.folder.File;
+import peer.core.peer.Peer;
+import peer.core.protocol.InputProtocol;
 
-public class Deserialisation implements InputProtocol {
-    public static final Charset CHARSET = Charset.forName("UTF-8");
+public class Deserialize implements InputProtocol {
+    static final Charset CHARSET = Charset.forName("UTF-8");
     private ByteBuffer byteBuffer;
 
-
-    public Deserialisation(ByteBuffer byteBuffer) {
+    public Deserialize(ByteBuffer byteBuffer) {
         this.byteBuffer = byteBuffer;
 
     }
 
-
     public String message(int id) {
-        String message = this.getString();
-        return message;
+        return this.getString();
     }
 
     @Override
@@ -53,12 +47,11 @@ public class Deserialisation implements InputProtocol {
     }
 
     @Override
-    public void fileFragment(int id) throws IOException{
+    public void fileFragment(int id) {
         String fileName = getString();
         long sizeFile = getLong();
         long pointer = getLong();
         int fragment = getInt();
-
         int limit = this.byteBuffer.limit();
         this.byteBuffer.limit(this.byteBuffer.position() + fragment);
         String message = CHARSET.decode(this.byteBuffer).toString();

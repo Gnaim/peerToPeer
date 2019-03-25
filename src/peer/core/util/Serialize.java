@@ -1,21 +1,21 @@
-package peer.util;
+package peer.core.util;
 
-import peer.folder.File;
-import peer.peer.Peer;
-import peer.protocol.OutputProtocol;
+import peer.core.folder.File;
+import peer.core.peer.Peer;
+import peer.core.protocol.OutputProtocol;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 
-public class Serializable implements OutputProtocol {
+public class Serialize implements OutputProtocol {
     public static final Charset CHARSET = Charset.forName("UTF-8");
 
     private ByteBuffer byteBuffer;
 
 
-    public Serializable(ByteBuffer byteBuffer) {
+    public Serialize(ByteBuffer byteBuffer) {
         this.byteBuffer = byteBuffer;
     }
 
@@ -59,7 +59,7 @@ public class Serializable implements OutputProtocol {
         this.byteBuffer
                 .clear()
                 .put((byte) 1);
-        ByteBuffer buffer = CHARSET.encode("You are connected from: " + serverName + ip);
+        ByteBuffer buffer = CHARSET.encode("You are message from: " + serverName + ip);
         this.byteBuffer
                 .putInt(buffer.remaining())
                 .put(buffer)

@@ -9,11 +9,10 @@ import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
-import peer.folder.Folder;
-import peer.logger.IServerLogger;
-import peer.peer.Peer;
-import peer.util.Deserialisation;
-import peer.util.Serializable;
+import peer.core.folder.Folder;
+import peer.core.logger.IServerLogger;
+import peer.core.peer.Peer;
+import peer.core.util.Serialize;
 
 public class Server implements Runnable {
 
@@ -24,7 +23,7 @@ public class Server implements Runnable {
     private IServerLogger iServerLogger;
     private int port;
     private boolean stop;
-    private Serializable serverSerializer;
+    private Serialize serverSerializer;
     private ArrayList<Peer> peers;
     private Folder folder;
     
@@ -40,7 +39,7 @@ public class Server implements Runnable {
         this.stop = false;
         this.byteBuffer = ByteBuffer.allocateDirect(65574);
         this.selector = Selector.open();
-        this.serverSerializer = new Serializable(this.byteBuffer);
+        this.serverSerializer = new Serialize(this.byteBuffer);
         this.iServerLogger = new IServerLogger();  
         this.peers = new ArrayList<>();
         this.peers.add(new Peer(23,"Test Adress")); // Test Peer

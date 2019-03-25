@@ -1,7 +1,6 @@
-package peer.folder;
+package peer.core.folder;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -17,10 +16,10 @@ public class Folder {
         this.folder = new File(PATH);
     }
 
-    public ArrayList<peer.folder.File> listFilesForFolder() {
-        ArrayList<peer.folder.File> files = new ArrayList<>();
+    public ArrayList<peer.core.folder.File> listFilesForFolder() {
+        ArrayList<peer.core.folder.File> files = new ArrayList<>();
         for (final File fileEntry : folder.listFiles()) {
-            files.add(new peer.folder.File(fileEntry.getName(), fileEntry.length()));
+            files.add(new peer.core.folder.File(fileEntry.getName(), fileEntry.length()));
         }
         return files;
     }
