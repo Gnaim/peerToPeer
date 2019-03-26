@@ -16,6 +16,8 @@ public interface InputProtocol {
      */
     String  message(int id);
 
+    int declarePort(int id);
+
     /**
      * To request the list of all the peers
      * example : [ 4, INT, [ INT, STRING ]* ]

@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class Folder {
 
-    private static final String PATH = Paths.get(".").toAbsolutePath().normalize().toString()+"/src/peer/src";
+    private static final String PATH = Paths.get(".").toAbsolutePath().normalize().toString()+"/src/peer/core/src";
     private File folder;
 
     public Folder() {
@@ -26,16 +26,14 @@ public class Folder {
 
     public Blob getFile(String file){
         File files = new File(PATH+file);
-
         return null;
     }
 
-    public void ceateFile(String nameFile,String c) throws IOException {
+    public static void ceateFile(String nameFile,String c) throws IOException {
         FileOutputStream fos = new FileOutputStream(PATH+"/"+nameFile);
         fos.write(c.getBytes());
         fos.flush();
         fos.close();
-	
     }
     
 

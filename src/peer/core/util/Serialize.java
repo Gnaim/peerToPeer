@@ -137,6 +137,7 @@ public class Serialize implements OutputProtocol {
 
     @Override
     public void commandeFileFragment(int id, String fileName, long sizeFile, long pointer, int fragment) {
+        System.out.println(id +" " + fileName +" " + sizeFile +" " + pointer +" " +fragment);
         this.byteBuffer
                 .clear()
                 .put((byte) id);

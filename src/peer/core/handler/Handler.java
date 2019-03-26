@@ -58,10 +58,10 @@ public class Handler implements InputProtocol, OutputProtocol {
                 this.iClientLogger.message(id,this.message(id));
                 commandePeerList(3);
                 commandeFileList(5);
-
+                commandeFileFragment(7,"smalltextfile.c",1757,0,1757);
                 break;
             case COMMANDE_DECLARE_PORT: // ID : 2
-                this.iClientLogger.declarePort(id,3333); //todo add method
+                this.iClientLogger.declarePort(id,declarePort(id)); //todo add method
                 break;
             case COMMANDE_PEER_LIST: // ID : 3
                 this.iClientLogger.command(id);
@@ -85,8 +85,8 @@ public class Handler implements InputProtocol, OutputProtocol {
 
                 break;
             case COMMANDE_FILE_FRAGMENT: // ID : 8
+                fileFragment(id);
                 this.iClientLogger.command(id);
-
 
                 break;
 
@@ -105,6 +105,11 @@ public class Handler implements InputProtocol, OutputProtocol {
     }
 
     @Override
+    public int declarePort(int id) {
+        return this.deserialize.declarePort(id);
+    }
+
+    @Override
     public ArrayList<Peer> peerList(int id) {
         return this.deserialize.peerList(id);
     }
@@ -115,7 +120,7 @@ public class Handler implements InputProtocol, OutputProtocol {
     }
 
     @Override
-    public void fileFragment(int id)  {
+    public void fileFragment(int id) throws IOException {
         this.deserialize.fileFragment(id);
     }
 
@@ -145,6 +150,7 @@ public class Handler implements InputProtocol, OutputProtocol {
 
     @Override
     public void commandeFileFragment(int id, String fileName, long sizeFile, long pointer, int fragment) throws IOException {
+        System.out.println("test");
         this.serialize.commandeFileFragment(id,fileName,sizeFile,pointer,fragment);
         writeOnSocketChannel();
     }
