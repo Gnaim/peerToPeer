@@ -38,6 +38,7 @@ public class Deserialize implements InputProtocol {
             String address = this.getString();
             peers.add(new Peer(port, address));
         }
+        peers.add(new Peer(5486,"prog-reseau-m1.lacl.fr"));
         byteBuffer.clear();
         return peers;
     }

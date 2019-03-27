@@ -1,6 +1,7 @@
 package peer.core.handler;
 
 import peer.Client;
+import peer.core.ClientGui;
 import peer.core.folder.File;
 import peer.core.folder.Folder;
 import peer.core.folder.Fragment;
@@ -11,9 +12,12 @@ import peer.core.protocol.OutputProtocol;
 import peer.core.util.Deserialize;
 import peer.core.util.Serialize;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.spi.AbstractResourceBundleProvider;
 
 public class Handler implements InputProtocol, OutputProtocol {
 
@@ -43,6 +47,9 @@ public class Handler implements InputProtocol, OutputProtocol {
 
     private ILogger iClientLogger;
 
+    private ArrayList <Peer> peers;
+
+
     private Folder folder;
     public Handler(Client client) {
         this.byteBuffer = client.getByteBuffer();
@@ -51,6 +58,7 @@ public class Handler implements InputProtocol, OutputProtocol {
         this.deserialize = new Deserialize(this.byteBuffer);
         this.client = client;
         this.folder = new Folder();
+        this.peers = new ArrayList<>();
     }
 
     public void start() throws IOException {
@@ -60,9 +68,8 @@ public class Handler implements InputProtocol, OutputProtocol {
             case COMMANDE_MESSAGE: // ID : 1
 
                 this.iClientLogger.message(id,this.message(id));
-                //commandePeerList(3);
+                commandePeerList(3);
                 //commandeFileList(5);
-               // commandeFileFragment(7,"maroine.txt",12,0,5);
                 break;
             case COMMANDE_DECLARE_PORT: // ID : 2
                 this.iClientLogger.declarePort(id,declarePort(id)); //todo add method
@@ -73,12 +80,12 @@ public class Handler implements InputProtocol, OutputProtocol {
                 break;
             case COMMANDE_SEND_PEER_LIST: // ID : 4
 
-               // this.iClientLogger.listPeer(id,this.peerList(id));
+                this.iClientLogger.listPeer(id,this.peerList(id));
 
                 break;
             case COMMANDE_FILE_LIST: // ID : 5
                 this.iClientLogger.command(id);
-                //this.commandeSendFileList(4,folder.listFilesForFolder());
+                this.commandeSendFileList(6,folder.listFilesForFolder());
 
                 break;
             case COMMANDE_SEND_FILE_LIST:// ID : 6
@@ -106,7 +113,8 @@ public class Handler implements InputProtocol, OutputProtocol {
 
     @Override
     public String message(int id) {
-        return this.deserialize.message(id);
+        var message = this.deserialize.message(id);
+        return message;
     }
 
     @Override
@@ -116,7 +124,13 @@ public class Handler implements InputProtocol, OutputProtocol {
 
     @Override
     public ArrayList<Peer> peerList(int id) {
-        return this.deserialize.peerList(id);
+        ArrayList <Peer> peers = this.deserialize.peerList(id);
+        for (Peer p : peers ) {
+            if(!this.peers.contains(p)){
+                this.peers.add(p);
+            }
+        }
+        return peers;
     }
 
     @Override
