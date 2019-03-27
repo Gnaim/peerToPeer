@@ -69,7 +69,7 @@ public class Handler implements InputProtocol, OutputProtocol {
 
                 this.iClientLogger.message(id,this.message(id));
                 commandePeerList(3);
-                //commandeFileList(5);
+                commandeFileList(5);
                 break;
             case COMMANDE_DECLARE_PORT: // ID : 2
                 this.iClientLogger.declarePort(id,declarePort(id)); //todo add method
@@ -92,7 +92,7 @@ public class Handler implements InputProtocol, OutputProtocol {
                 this.iClientLogger.listFile(id,this.fileList(id));
                 break;
             case COMMANDE_SEND_FILE_FRAGMENT:// ID : 7
-                //commandeFileFragment(8,this.fileItem(id));
+                commandeFileFragment(8,this.fileItem(id));
                 this.iClientLogger.command(id);
 
                 break;

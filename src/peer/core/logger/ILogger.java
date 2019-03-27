@@ -8,25 +8,25 @@ import java.util.ArrayList;
 
 public class ILogger implements Logger {
 
-    ClientGui clientGui = new ClientGui();
+//    ClientGui clientGui = new ClientGui();
 
     @Override
     public void message(int id, String message) {
         System.out.println("[" + id + ", '" + message + "']");
-        clientGui.getLogger().append("[" + id + ", '" + message + "']"+"\n");
+  //      clientGui.getLogger().append("[" + id + ", '" + message + "']"+"\n");
     }
 
     @Override
     public void declarePort(int id, int port) {
         System.out.println("[" + id + ", '" + port + "']");
-        clientGui.getLogger().append("[" + id + ", '" + port + "']"+"\n");
+    //    clientGui.getLogger().append("[" + id + ", '" + port + "']"+"\n");
     }
 
     @Override
     public void listLength(int size) {
         this.separator();
         System.out.println("Peer : [ " + size + " ]");
-        clientGui.getLogger().append("Peer : [" + size + "']"+"\n");
+      //  clientGui.getLogger().append("Peer : [" + size + "']"+"\n");
 
     }
 
@@ -34,19 +34,19 @@ public class ILogger implements Logger {
     public void fileLength(int size) {
         this.separator();
         System.out.println("File : [ " + size + " ]");
-        clientGui.getLogger().append("File : [" + size + "']"+"\n");
+       // clientGui.getLogger().append("File : [" + size + "']"+"\n");
     }
 
     @Override
     public void listPeer(int id, ArrayList<Peer> peers) {
         System.out.print("[" + id + ", " + peers.size() + ", [ " );
-        clientGui.getLogger().append("[" + id + ", " + peers.size() + ", [ " );
+       // clientGui.getLogger().append("[" + id + ", " + peers.size() + ", [ " );
         for (Peer p : peers){
-            clientGui.getLogger().append("[ " + p.getPort() + "," + p.getAddress() + " ]");
+         //   clientGui.getLogger().append("[ " + p.getPort() + "," + p.getAddress() + " ]");
 
             System.out.print("[ " + p.getPort() + "," + p.getAddress() + " ]");
         }
-        clientGui.getLogger().append("]]"+"\n");
+        //clientGui.getLogger().append("]]"+"\n");
 
 
         System.out.println(" ] ]");
