@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import peer.core.folder.File;
 import peer.core.folder.Folder;
+import peer.core.folder.Fragment;
 import peer.core.peer.Peer;
 import peer.core.protocol.InputProtocol;
 
@@ -66,6 +67,16 @@ public class Deserialize implements InputProtocol {
         System.out.println(contents);
         Folder.ceateFile(fileName, contents);
         this.byteBuffer.clear();
+    }
+
+    @Override
+    public Fragment fileItem(int id) {
+        String fileName = getString();
+        long sizeFile = getLong();
+        long pointer = getLong();
+        int fragment = getInt();
+
+        return new Fragment(fileName,sizeFile,pointer,fragment);
     }
 
     private int getInt() {

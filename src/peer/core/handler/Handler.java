@@ -2,6 +2,8 @@ package peer.core.handler;
 
 import peer.Client;
 import peer.core.folder.File;
+import peer.core.folder.Folder;
+import peer.core.folder.Fragment;
 import peer.core.logger.ILogger;
 import peer.core.peer.Peer;
 import peer.core.protocol.InputProtocol;
@@ -41,12 +43,14 @@ public class Handler implements InputProtocol, OutputProtocol {
 
     private ILogger iClientLogger;
 
+    private Folder folder;
     public Handler(Client client) {
         this.byteBuffer = client.getByteBuffer();
         this.iClientLogger = client.getiClientLogger();
         this.serialize = new Serialize(this.byteBuffer);
         this.deserialize = new Deserialize(this.byteBuffer);
         this.client = client;
+        this.folder = new Folder();
     }
 
     public void start() throws IOException {
@@ -58,7 +62,7 @@ public class Handler implements InputProtocol, OutputProtocol {
                 this.iClientLogger.message(id,this.message(id));
                 commandePeerList(3);
                 commandeFileList(5);
-                commandeFileFragment(7,"smalltextfile.c",1757,0,1757);
+               // commandeFileFragment(7,"maroine.txt",12,0,5);
                 break;
             case COMMANDE_DECLARE_PORT: // ID : 2
                 this.iClientLogger.declarePort(id,declarePort(id)); //todo add method
@@ -74,13 +78,14 @@ public class Handler implements InputProtocol, OutputProtocol {
                 break;
             case COMMANDE_FILE_LIST: // ID : 5
                 this.iClientLogger.command(id);
+                this.commandeSendFileList(4,folder.listFilesForFolder());
 
                 break;
             case COMMANDE_SEND_FILE_LIST:// ID : 6
                 this.iClientLogger.listFile(id,this.fileList(id));
                 break;
             case COMMANDE_SEND_FILE_FRAGMENT:// ID : 7
-
+                commandeFileFragment(8,this.fileItem(id));
                 this.iClientLogger.command(id);
 
                 break;
@@ -120,6 +125,11 @@ public class Handler implements InputProtocol, OutputProtocol {
     }
 
     @Override
+    public Fragment fileItem(int id) {
+        return this.deserialize.fileItem(id);
+    }
+
+    @Override
     public void fileFragment(int id) throws IOException {
         this.deserialize.fileFragment(id);
     }
@@ -149,15 +159,14 @@ public class Handler implements InputProtocol, OutputProtocol {
     }
 
     @Override
-    public void commandeFileFragment(int id, String fileName, long sizeFile, long pointer, int fragment) throws IOException {
-        System.out.println("test");
-        this.serialize.commandeFileFragment(id,fileName,sizeFile,pointer,fragment);
+    public void commandeFileFragment(int id,Fragment fragment) throws IOException {
+        this.serialize.commandeFileFragment(id,fragment);
         writeOnSocketChannel();
     }
 
     @Override
     public void commandeSendFileList(int id, ArrayList<File> files) throws IOException {
-        this.commandeSendFileList(id,files);
+        this.serialize.commandeSendFileList(id,files);
         writeOnSocketChannel();
     }
 

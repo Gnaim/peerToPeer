@@ -22,7 +22,7 @@ public class Client implements Runnable {
     public Client(String serverAddress, int serverPort) {
         this.serverPort = serverPort;
         this.serverAddress = serverAddress;
-        this.byteBuffer = ByteBuffer.allocate(9000);
+        this.byteBuffer = ByteBuffer.allocate(70536);
         this.iClientLogger = new ILogger();
 
         this.handler= new Handler(this);

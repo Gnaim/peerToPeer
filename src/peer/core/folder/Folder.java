@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class Folder {
 
-    private static final String PATH = Paths.get(".").toAbsolutePath().normalize().toString()+"/src/peer/core/src";
+    public static final String PATH = Paths.get(".").toAbsolutePath().normalize().toString()+"/src/peer/core/src";
     private File folder;
 
     public Folder() {
