@@ -1,12 +1,16 @@
 package peer.core.util;
 
 import peer.core.folder.File;
+import peer.core.folder.Folder;
+import peer.core.folder.Fragment;
 import peer.core.peer.Peer;
 import peer.core.protocol.OutputProtocol;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class Serialize implements OutputProtocol {
@@ -96,7 +100,7 @@ public class Serialize implements OutputProtocol {
     }
 
     @Override
-    public void commandeSendPeerList(int id, ArrayList<Peer> peers) throws IOException {
+    public void commandeSendPeerList(int id, ArrayList<Peer> peers)  {
         this.byteBuffer.clear()
                 .put((byte) 4)
                 .putInt(peers.size());
@@ -136,17 +140,29 @@ public class Serialize implements OutputProtocol {
 
 
     @Override
-    public void commandeFileFragment(int id, String fileName, long sizeFile, long pointer, int fragment) {
+    public void commandeFileFragment(int id, Fragment fragment) throws IOException {
+
         this.byteBuffer
                 .clear()
                 .put((byte) id);
-        ByteBuffer buffer1 = CHARSET.encode(fileName);
+        ByteBuffer buffer1 = CHARSET.encode(fragment.getFileName());
         this.byteBuffer
                 .putInt(buffer1.remaining())
                 .put(buffer1)
-                .putLong(sizeFile)
-                .putLong(pointer)
-                .putInt(fragment)
+                .putLong(fragment.getSizeFile())
+                .putLong(fragment.getPointer())
+                .putInt(fragment.getFragment());
+
+        String content = new String(
+                Files.readAllBytes(
+                        Paths.get(Folder.PATH + "/" + fragment.getFileName()))
+                )
+                .substring((int)fragment.getPointer(),(int)fragment.getPointer()+fragment.getFragment()-1);
+        ByteBuffer buffer2 = CHARSET.encode(content);
+        System.out.println(content);
+        this.byteBuffer
+                .putInt(buffer2.remaining())
+                .put(buffer2)
                 .flip();
     }
 

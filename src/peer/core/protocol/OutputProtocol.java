@@ -1,6 +1,7 @@
 package peer.core.protocol;
 
 import peer.core.folder.File;
+import peer.core.folder.Fragment;
 import peer.core.peer.Peer;
 
 import java.io.IOException;
@@ -8,6 +9,12 @@ import java.util.ArrayList;
 
 public interface OutputProtocol {
 
+    /**
+     *
+     * @param id
+     * @param message
+     * @throws IOException
+     */
     void commandeMessage(int id, String message) throws IOException;
     /**
      * send port
@@ -48,12 +55,9 @@ public interface OutputProtocol {
      * To request a fragment of file
      * example : [ 7, file.txt, 100, 0, 100 ]
      * @param id : ID = 7
-     * @param fileName
-     * @param sizeFile
-     * @param pointer
      * @param fragment
      */
-    void commandeFileFragment(int id, String fileName, long sizeFile, long pointer, int fragment) throws IOException;
+    void commandeFileFragment(int id, Fragment fragment) throws IOException;
 
 
 }

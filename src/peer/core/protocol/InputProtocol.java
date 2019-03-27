@@ -2,6 +2,7 @@ package peer.core.protocol;
 
 
 import peer.core.folder.File;
+import peer.core.folder.Fragment;
 import peer.core.peer.Peer;
 
 import java.io.IOException;
@@ -15,6 +16,8 @@ public interface InputProtocol {
      * @return
      */
     String  message(int id);
+
+    int declarePort(int id);
 
     /**
      * To request the list of all the peers
@@ -30,6 +33,7 @@ public interface InputProtocol {
      */
     ArrayList<File> fileList(int id);
 
+    Fragment fileItem(int id);
     /**
      * example : [ 8, STRING, LONG, LONG, INT, BLOB ] R
      * @param id : ID = 8
