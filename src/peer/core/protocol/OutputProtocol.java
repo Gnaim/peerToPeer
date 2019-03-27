@@ -9,6 +9,12 @@ import java.util.ArrayList;
 
 public interface OutputProtocol {
 
+    /**
+     *
+     * @param id
+     * @param message
+     * @throws IOException
+     */
     void commandeMessage(int id, String message) throws IOException;
     /**
      * send port

@@ -46,7 +46,7 @@ public class Handler implements InputProtocol, OutputProtocol {
     private Folder folder;
     public Handler(Client client) {
         this.byteBuffer = client.getByteBuffer();
-        this.iClientLogger = client.getiClientLogger();
+        this.iClientLogger = new ILogger();
         this.serialize = new Serialize(this.byteBuffer);
         this.deserialize = new Deserialize(this.byteBuffer);
         this.client = client;
@@ -60,8 +60,8 @@ public class Handler implements InputProtocol, OutputProtocol {
             case COMMANDE_MESSAGE: // ID : 1
 
                 this.iClientLogger.message(id,this.message(id));
-                commandePeerList(3);
-                commandeFileList(5);
+                //commandePeerList(3);
+                //commandeFileList(5);
                // commandeFileFragment(7,"maroine.txt",12,0,5);
                 break;
             case COMMANDE_DECLARE_PORT: // ID : 2
@@ -73,24 +73,24 @@ public class Handler implements InputProtocol, OutputProtocol {
                 break;
             case COMMANDE_SEND_PEER_LIST: // ID : 4
 
-                this.iClientLogger.listPeer(id,this.peerList(id));
+               // this.iClientLogger.listPeer(id,this.peerList(id));
 
                 break;
             case COMMANDE_FILE_LIST: // ID : 5
                 this.iClientLogger.command(id);
-                this.commandeSendFileList(4,folder.listFilesForFolder());
+                //this.commandeSendFileList(4,folder.listFilesForFolder());
 
                 break;
             case COMMANDE_SEND_FILE_LIST:// ID : 6
                 this.iClientLogger.listFile(id,this.fileList(id));
                 break;
             case COMMANDE_SEND_FILE_FRAGMENT:// ID : 7
-                commandeFileFragment(8,this.fileItem(id));
+                //commandeFileFragment(8,this.fileItem(id));
                 this.iClientLogger.command(id);
 
                 break;
             case COMMANDE_FILE_FRAGMENT: // ID : 8
-                fileFragment(id);
+                //fileFragment(id);
                 this.iClientLogger.command(id);
 
                 break;
