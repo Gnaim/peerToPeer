@@ -6,6 +6,7 @@ import peer.core.folder.Fragment;
 import peer.core.peer.Peer;
 import peer.core.protocol.OutputProtocol;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
@@ -142,28 +143,29 @@ public class Serialize implements OutputProtocol {
     @Override
     public void commandeFileFragment(int id, Fragment fragment) throws IOException {
 
+        FileInputStream inputStream = new FileInputStream(Folder.PATH+"/"+fragment.getFileName());
+        int sizeFragment = (int)fragment.getSizeFile()-(int)fragment.getPointer();
+        byte[] blobFile = new byte[sizeFragment];
+        ByteBuffer buffer3 = CHARSET.encode(fragment.getFileName());
+        inputStream.read(blobFile,(int)fragment.getPointer(),(int)fragment.getSizeFile());
+
+
         this.byteBuffer
                 .clear()
-                .put((byte) id);
-        ByteBuffer buffer1 = CHARSET.encode(fragment.getFileName());
-        this.byteBuffer
-                .putInt(buffer1.remaining())
-                .put(buffer1)
+                .put((byte)id)
+                .putInt(buffer3.remaining())
+                .put(buffer3)
                 .putLong(fragment.getSizeFile())
                 .putLong(fragment.getPointer())
                 .putInt(fragment.getFragment());
 
-        String content = new String(
-                Files.readAllBytes(
-                        Paths.get(Folder.PATH + "/" + fragment.getFileName()))
-                )
-                .substring((int)fragment.getPointer(),(int)fragment.getPointer()+fragment.getFragment()-1);
-        ByteBuffer buffer2 = CHARSET.encode(content);
-        System.out.println(content);
-        this.byteBuffer
-                .putInt(buffer2.remaining())
-                .put(buffer2)
-                .flip();
+        for(int i = 0; i < blobFile.length ; i++) {
+
+            this.byteBuffer.put(blobFile[i]);
+
+        }
+
+        this.byteBuffer.flip();
     }
 
 

@@ -92,7 +92,7 @@ public class Handler implements InputProtocol, OutputProtocol {
                 this.iClientLogger.listFile(id,this.fileList(id));
                 break;
             case COMMANDE_SEND_FILE_FRAGMENT:// ID : 7
-//                commandeFileFragment(8,this.fileItem(id));
+               commandeFileFragment(8,this.fileItem(id));
                 this.iClientLogger.command(id);
 
                 break;
