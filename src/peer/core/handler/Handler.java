@@ -68,8 +68,8 @@ public class Handler implements InputProtocol, OutputProtocol {
             case COMMANDE_MESSAGE: // ID : 1
 
                 this.iClientLogger.message(id,this.message(id));
-                commandePeerList(3);
                 commandeFileList(5);
+//                commandePeerList(3);
                 break;
             case COMMANDE_DECLARE_PORT: // ID : 2
                 this.iClientLogger.declarePort(id,declarePort(id)); //todo add method
@@ -92,7 +92,7 @@ public class Handler implements InputProtocol, OutputProtocol {
                 this.iClientLogger.listFile(id,this.fileList(id));
                 break;
             case COMMANDE_SEND_FILE_FRAGMENT:// ID : 7
-                commandeFileFragment(8,this.fileItem(id));
+//                commandeFileFragment(8,this.fileItem(id));
                 this.iClientLogger.command(id);
 
                 break;
@@ -110,16 +110,28 @@ public class Handler implements InputProtocol, OutputProtocol {
 
     }
 
-
     @Override
-    public String message(int id) {
+    public String message(int id) throws IOException {
         var message = this.deserialize.message(id);
         return message;
     }
 
     @Override
-    public int declarePort(int id) {
-        return this.deserialize.declarePort(id);
+    public int declarePort(int id) throws IOException {
+
+        String address = this.client.getSocketChannel().getRemoteAddress().toString().split("/")[0];
+        int port = this.deserialize.declarePort(id);
+        Peer peer = new Peer(port,address);
+
+        if (!this.peers.contains(peer))
+            this.peers.add(peer);
+
+        return port;
+    }
+
+    @Override
+    public void askListPeer(int id) {
+        this.deserialize.askListPeer(id);
     }
 
     @Override
@@ -131,6 +143,11 @@ public class Handler implements InputProtocol, OutputProtocol {
             }
         }
         return peers;
+    }
+
+    @Override
+    public void askListFile(int id) {
+        this.deserialize.askListFile(id);
     }
 
     @Override

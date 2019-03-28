@@ -30,6 +30,11 @@ public class Deserialize implements InputProtocol {
     }
 
     @Override
+    public void askListPeer(int id) {
+        // todo
+    }
+
+    @Override
     public ArrayList<Peer> peerList(int id) {
         int paire = this.getInt();
         ArrayList<Peer> peers = new ArrayList<>();
@@ -41,6 +46,11 @@ public class Deserialize implements InputProtocol {
         peers.add(new Peer(5486,"prog-reseau-m1.lacl.fr"));
         byteBuffer.clear();
         return peers;
+    }
+
+    @Override
+    public void askListFile(int id) {
+        //todo
     }
 
     @Override
