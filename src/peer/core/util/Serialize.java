@@ -139,15 +139,22 @@ public class Serialize implements OutputProtocol {
         this.byteBuffer.flip();
     }
 
-
     @Override
     public void commandeFileFragment(int id, Fragment fragment) throws IOException {
+        //impelemnts
+    }
 
+
+    public void commandeSendFileFragment(int id, Fragment fragment) throws IOException {
+        System.out.println("the file demandee : "+fragment.getFileName());
+        System.out.println("the file size : "+fragment.getSizeFile());
+        System.out.println("the file pointer : "+fragment.getPointer());
+        System.out.println("the file fragment : "+fragment.getFragment());
+
+        byte[] blobFile = new byte[(int)fragment.getSizeFile()];
         FileInputStream inputStream = new FileInputStream(Folder.PATH+"/"+fragment.getFileName());
-        int sizeFragment = (int)fragment.getSizeFile()-(int)fragment.getPointer();
-        byte[] blobFile = new byte[sizeFragment];
         ByteBuffer buffer3 = CHARSET.encode(fragment.getFileName());
-        inputStream.read(blobFile,(int)fragment.getPointer(),(int)fragment.getSizeFile());
+        inputStream.read(blobFile,(int)fragment.getPointer(),fragment.getFragment());
 
 
         this.byteBuffer
@@ -158,15 +165,16 @@ public class Serialize implements OutputProtocol {
                 .putLong(fragment.getSizeFile())
                 .putLong(fragment.getPointer())
                 .putInt(fragment.getFragment());
-
-        for(int i = 0; i < blobFile.length ; i++) {
+        for(int i = 0; i < fragment.getFragment() ; i++) {
 
             this.byteBuffer.put(blobFile[i]);
 
         }
 
         this.byteBuffer.flip();
+
     }
+
 
 
 }

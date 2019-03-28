@@ -92,7 +92,7 @@ public class Handler implements InputProtocol, OutputProtocol {
                 this.iClientLogger.listFile(id,this.fileList(id));
                 break;
             case COMMANDE_SEND_FILE_FRAGMENT:// ID : 7
-               commandeFileFragment(8,this.fileItem(id));
+               commandeSendFileFragment(8,this.fileItem(id));
                 this.iClientLogger.command(id);
 
                 break;
@@ -192,6 +192,11 @@ public class Handler implements InputProtocol, OutputProtocol {
     @Override
     public void commandeFileFragment(int id,Fragment fragment) throws IOException {
         this.serialize.commandeFileFragment(id,fragment);
+        writeOnSocketChannel();
+    }
+
+    public void commandeSendFileFragment(int id,Fragment fragment) throws IOException {
+        this.serialize.commandeSendFileFragment(id,fragment);
         writeOnSocketChannel();
     }
 
