@@ -19,11 +19,11 @@ public class Peer {
 
     @Override
     public String toString() {
-        return address+port;
+        return address + port;
     }
 
     @Override
     public boolean equals(Object obj) {
-        return obj.toString().equals(address+port) ;
+        return obj.toString().equals(address + port);
     }
 }

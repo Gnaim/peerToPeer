@@ -9,11 +9,18 @@ import java.util.ArrayList;
 
 public class Folder {
 
-    public static final String PATH = Paths.get(".").toAbsolutePath().normalize().toString()+"/src/peer/core/src";
+    public static final String PATH = Paths.get(".").toAbsolutePath().normalize().toString() + "/src/peer/core/src";
     private File folder;
 
     public Folder() {
         this.folder = new File(PATH);
+    }
+
+    public static void ceateFile(String nameFile, String c) throws IOException {
+        FileOutputStream fos = new FileOutputStream(PATH + "/" + nameFile);
+        fos.write(c.getBytes());
+        fos.flush();
+        fos.close();
     }
 
     public ArrayList<peer.core.folder.File> listFilesForFolder() {
@@ -24,17 +31,10 @@ public class Folder {
         return files;
     }
 
-    public Blob getFile(String file){
-        File files = new File(PATH+file);
+    public Blob getFile(String file) {
+        File files = new File(PATH + file);
         return null;
     }
 
-    public static void ceateFile(String nameFile,String c) throws IOException {
-        FileOutputStream fos = new FileOutputStream(PATH+"/"+nameFile);
-        fos.write(c.getBytes());
-        fos.flush();
-        fos.close();
-    }
-    
 
 }

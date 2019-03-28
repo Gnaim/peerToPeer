@@ -1,14 +1,13 @@
 package peer;
 
+import peer.core.handler.Handler;
+import peer.core.util.RepeatKeyboard;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
-
-import peer.core.handler.Handler;
-import peer.core.logger.ILogger;
-import peer.core.util.RepeatKeyboard;
 
 
 public class Client implements Runnable {
@@ -23,12 +22,16 @@ public class Client implements Runnable {
         this.serverPort = serverPort;
         this.serverAddress = serverAddress;
         this.byteBuffer = ByteBuffer.allocate(70536);
-        this.handler= new Handler(this);
+        this.handler = new Handler(this);
     }
 
-    public SocketChannel getSocketChannel() { return socketChannel; }
+    public ByteBuffer getByteBuffer() {
+        return byteBuffer;
+    }
 
-    public ByteBuffer getByteBuffer() { return byteBuffer; }
+    public SocketChannel getSocketChannel() {
+        return socketChannel;
+    }
 
     public void run() {
         try {
@@ -37,10 +40,10 @@ public class Client implements Runnable {
             this.socketChannel.connect(socketAddress);
             new Thread(new RepeatKeyboard(this.socketChannel)).start();
             while (this.socketChannel.isConnected()) {
-                if(this.socketChannel.read(this.byteBuffer) > 0){
+                if (this.socketChannel.read(this.byteBuffer) > 0) {
                     this.handler.start();
-                //new RepeatKeyboard(this.socketChannel).run();
-                }else
+                    //new RepeatKeyboard(this.socketChannel).run();
+                } else
                     this.socketChannel.close();
             }
         } catch (IOException e) {

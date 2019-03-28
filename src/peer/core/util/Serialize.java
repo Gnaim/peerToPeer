@@ -100,7 +100,7 @@ public class Serialize implements OutputProtocol {
     }
 
     @Override
-    public void commandeSendPeerList(int id, ArrayList<Peer> peers)  {
+    public void commandeSendPeerList(int id, ArrayList<Peer> peers) {
         this.byteBuffer.clear()
                 .put((byte) 4)
                 .putInt(peers.size());
@@ -156,8 +156,8 @@ public class Serialize implements OutputProtocol {
         String content = new String(
                 Files.readAllBytes(
                         Paths.get(Folder.PATH + "/" + fragment.getFileName()))
-                )
-                .substring((int)fragment.getPointer(),(int)fragment.getPointer()+fragment.getFragment()-1);
+        )
+                .substring((int) fragment.getPointer(), (int) fragment.getPointer() + fragment.getFragment() - 1);
         ByteBuffer buffer2 = CHARSET.encode(content);
         System.out.println(content);
         this.byteBuffer

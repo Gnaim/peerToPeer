@@ -1,7 +1,7 @@
 package peer.core.folder;
 
 public class Fragment {
-    private String fileName ;
+    private String fileName;
     private long sizeFile;
     private long pointer;
     private int fragment;
@@ -31,6 +31,6 @@ public class Fragment {
 
     @Override
     public String toString() {
-        return fileName +" "+ sizeFile +" "+ pointer +" "+ fragment;
+        return fileName + " " + sizeFile + " " + pointer + " " + fragment;
     }
 }

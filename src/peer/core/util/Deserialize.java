@@ -1,15 +1,15 @@
 package peer.core.util;
 
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-
 import peer.core.folder.File;
 import peer.core.folder.Folder;
 import peer.core.folder.Fragment;
 import peer.core.peer.Peer;
 import peer.core.protocol.InputProtocol;
+
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
 
 public class Deserialize implements InputProtocol {
     static final Charset CHARSET = Charset.forName("UTF-8");
@@ -43,7 +43,7 @@ public class Deserialize implements InputProtocol {
             String address = this.getString();
             peers.add(new Peer(port, address));
         }
-        peers.add(new Peer(5486,"prog-reseau-m1.lacl.fr"));
+        peers.add(new Peer(5486, "prog-reseau-m1.lacl.fr"));
         byteBuffer.clear();
         return peers;
     }
@@ -87,7 +87,7 @@ public class Deserialize implements InputProtocol {
         long pointer = getLong();
         int fragment = getInt();
 
-        return new Fragment(fileName,sizeFile,pointer,fragment);
+        return new Fragment(fileName, sizeFile, pointer, fragment);
     }
 
     private int getInt() {
