@@ -154,27 +154,28 @@ public class Serialize implements OutputProtocol {
 
     @Override
     public void commandeSendFileFragment(int id, Fragment fragment) throws IOException {
-        System.out.println(fragment);
-        FileInputStream inputStream = new FileInputStream(Folder.PATH + "/" + fragment.getFileName());
-        int sizeFragment = (int) (fragment.getSizeFile() - fragment.getPointer());
-        byte[] blobFile = new byte[sizeFragment];
-        ByteBuffer buffer = CHARSET.encode(fragment.getFileName());
-        inputStream.read(blobFile, (int) fragment.getPointer(), fragment.getFragment()-1);
+
+        byte[] blobFile = new byte[(int)fragment.getSizeFile()];
+        FileInputStream inputStream = new FileInputStream(Folder.PATH+"/"+fragment.getFileName());
+        ByteBuffer buffer3 = CHARSET.encode(fragment.getFileName());
+        inputStream.read(blobFile,(int)fragment.getPointer(),fragment.getFragment());
 
         this.byteBuffer
                 .clear()
-                .put((byte) id)
-                .putInt(buffer.remaining())
-                .put(buffer)
+                .put((byte)id)
+                .putInt(buffer3.remaining())
+                .put(buffer3)
                 .putLong(fragment.getSizeFile())
                 .putLong(fragment.getPointer())
                 .putInt(fragment.getFragment());
+        for(int i = 0; i < fragment.getFragment() ; i++) {
 
-        for (byte b : blobFile){
-            this.byteBuffer.put(b);
+            this.byteBuffer.put(blobFile[i]);
+
         }
 
         this.byteBuffer.flip();
+
     }
 
 
