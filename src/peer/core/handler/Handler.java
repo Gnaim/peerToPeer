@@ -15,7 +15,11 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
+import static peer.core.util.Serialize.CHARSET;
+
 public class Handler implements InputProtocol, OutputProtocol {
+
+    public static boolean getFollowingData = true;
 
     public static final int COMMANDE_MESSAGE = 1;
 
@@ -60,48 +64,57 @@ public class Handler implements InputProtocol, OutputProtocol {
 
     public void start() throws IOException {
         this.byteBuffer.flip();
-        int id = this.byteBuffer.get();
-        switch (id) {
-            case COMMANDE_MESSAGE: // ID : 1
+        if (getFollowingData){
 
-                this.iClientLogger.message(id, this.message(id));
-                commandeFileList(5);
-//                commandePeerList(3);
-                break;
-            case COMMANDE_DECLARE_PORT: // ID : 2
-                this.iClientLogger.declarePort(id, declarePort(id)); //todo add method
-                break;
-            case COMMANDE_PEER_LIST: // ID : 3
-                this.iClientLogger.command(id);
+            int id = this.byteBuffer.get();
+            switch (id) {
+                case COMMANDE_MESSAGE: // ID : 1
 
-                break;
-            case COMMANDE_SEND_PEER_LIST: // ID : 4
+                    this.iClientLogger.message(id, this.message(id));
+                    commandeFileList(5);
+                    //commandePeerList(3);
+                    this.commandeFileFragment(7, new Fragment("xso.txt", 46125, 0, 46125));
 
-                this.iClientLogger.listPeer(id, this.peerList(id));
+                    break;
+                case COMMANDE_DECLARE_PORT: // ID : 2
+                    this.iClientLogger.declarePort(id, declarePort(id)); //todo add method
+                    break;
+                case COMMANDE_PEER_LIST: // ID : 3
 
-                break;
-            case COMMANDE_FILE_LIST: // ID : 5
-                this.iClientLogger.command(id);
-                this.commandeSendFileList(6, folder.listFilesForFolder());
+                    //this.iClientLogger.command(id);
 
-                break;
-            case COMMANDE_SEND_FILE_LIST:// ID : 6
-                this.iClientLogger.listFile(id, this.fileList(id));
-                break;
-            case COMMANDE_SEND_FILE_FRAGMENT:// ID : 7
-//                commandeFileFragment(8,this.fileItem(id));
-                this.iClientLogger.command(id);
+                    break;
+                case COMMANDE_SEND_PEER_LIST: // ID : 4
 
-                break;
-            case COMMANDE_FILE_FRAGMENT: // ID : 8
-                //fileFragment(id);
-                this.iClientLogger.command(id);
+                    //this.iClientLogger.listPeer(id, this.peerList(id));
 
-                break;
+                    break;
+                case COMMANDE_FILE_LIST: // ID : 5
+                    this.iClientLogger.command(id);
+                    this.commandeSendFileList(6, folder.listFilesForFolder());
 
-            default: // ID : 1
+                    break;
+                case COMMANDE_SEND_FILE_LIST:// ID : 6
+                    this.iClientLogger.listFile(id, this.fileList(id));
+                    break;
+                case COMMANDE_SEND_FILE_FRAGMENT:// ID : 7
+                    //commandeSendFileFragment(8,this.fileItem(id));
+                    //this.commandeFileFragment(7, new Fragment("1test.txt", 59075, 0, 59075));
+                    this.iClientLogger.command(id);
 
-                this.iClientLogger.error(id);
+                    break;
+                case COMMANDE_FILE_FRAGMENT: // ID : 8
+                    fileFragment(id);
+                    this.iClientLogger.command(id);
+
+                    break;
+
+                default: // ID : 1
+
+                    this.iClientLogger.error(id);
+            }
+        }else{
+            this.followingData();
         }
         this.byteBuffer.clear();
 
@@ -193,6 +206,12 @@ public class Handler implements InputProtocol, OutputProtocol {
     }
 
     @Override
+    public void commandeSendFileFragment(int id, Fragment fragment) throws IOException {
+        this.serialize.commandeSendFileFragment(id, fragment);
+        writeOnSocketChannel();
+    }
+
+    @Override
     public void commandeSendFileList(int id, ArrayList<File> files) throws IOException {
         this.serialize.commandeSendFileList(id, files);
         writeOnSocketChannel();
@@ -203,7 +222,11 @@ public class Handler implements InputProtocol, OutputProtocol {
         this.serialize.commandeSendPeerList(id, peers);
         writeOnSocketChannel();
     }
-
+    void followingData() throws IOException {
+        String contents = CHARSET.decode(this.byteBuffer).toString();
+        Folder.ceateFile("xso.txt", contents);
+        this.byteBuffer.clear();
+    }
     private void writeOnSocketChannel() throws IOException {
         this.client.getSocketChannel().write(this.byteBuffer);
         this.byteBuffer.clear();

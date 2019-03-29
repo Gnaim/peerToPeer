@@ -17,7 +17,7 @@ public class Folder {
     }
 
     public static void ceateFile(String nameFile, String c) throws IOException {
-        FileOutputStream fos = new FileOutputStream(PATH + "/" + nameFile);
+        FileOutputStream fos = new FileOutputStream(PATH + "/" + nameFile,true);
         fos.write(c.getBytes());
         fos.flush();
         fos.close();

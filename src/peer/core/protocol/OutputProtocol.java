@@ -4,6 +4,7 @@ import peer.core.folder.File;
 import peer.core.folder.Fragment;
 import peer.core.peer.Peer;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -64,6 +65,13 @@ public interface OutputProtocol {
      * @param fragment
      */
     void commandeFileFragment(int id, Fragment fragment) throws IOException;
+
+    /**
+     *
+     * @param id
+     * @param fragment
+     */
+    void commandeSendFileFragment(int id, Fragment fragment) throws IOException;
 
 
 }

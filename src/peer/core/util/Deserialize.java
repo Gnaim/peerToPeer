@@ -3,6 +3,7 @@ package peer.core.util;
 import peer.core.folder.File;
 import peer.core.folder.Folder;
 import peer.core.folder.Fragment;
+import peer.core.handler.Handler;
 import peer.core.peer.Peer;
 import peer.core.protocol.InputProtocol;
 
@@ -67,6 +68,7 @@ public class Deserialize implements InputProtocol {
 
     @Override
     public void fileFragment(int id) throws IOException {
+        System.out.println("test");
         String fileName = getString();
         long sizeFile = getLong();
         long pointer = getLong();
@@ -75,9 +77,10 @@ public class Deserialize implements InputProtocol {
         this.byteBuffer.limit(this.byteBuffer.position() + fragment);
         String contents = CHARSET.decode(this.byteBuffer).toString();
         this.byteBuffer.limit(limit);
-        System.out.println(contents);
         Folder.ceateFile(fileName, contents);
         this.byteBuffer.clear();
+        //just fot test
+         Handler.getFollowingData = false;
     }
 
     @Override
