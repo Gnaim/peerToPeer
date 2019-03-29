@@ -72,8 +72,8 @@ public class Handler implements InputProtocol, OutputProtocol {
 
                     this.iClientLogger.message(id, this.message(id));
                     commandeFileList(5);
-                    //commandePeerList(3);
-                    this.commandeFileFragment(7, new Fragment("xso.txt", 46125, 0, 46125));
+                    commandePeerList(3);
+                    //this.commandeFileFragment(7, new Fragment("xso.txt", 46125, 0, 46125));
 
                     break;
                 case COMMANDE_DECLARE_PORT: // ID : 2
@@ -81,12 +81,12 @@ public class Handler implements InputProtocol, OutputProtocol {
                     break;
                 case COMMANDE_PEER_LIST: // ID : 3
 
-                    //this.iClientLogger.command(id);
+                    this.iClientLogger.command(id);
 
                     break;
                 case COMMANDE_SEND_PEER_LIST: // ID : 4
 
-                    //this.iClientLogger.listPeer(id, this.peerList(id));
+                    this.iClientLogger.listPeer(id, this.peerList(id));
 
                     break;
                 case COMMANDE_FILE_LIST: // ID : 5
@@ -98,7 +98,7 @@ public class Handler implements InputProtocol, OutputProtocol {
                     this.iClientLogger.listFile(id, this.fileList(id));
                     break;
                 case COMMANDE_SEND_FILE_FRAGMENT:// ID : 7
-                    //commandeSendFileFragment(8,this.fileItem(id));
+                    commandeSendFileFragment(8,this.fileItem(id));
                     //this.commandeFileFragment(7, new Fragment("1test.txt", 59075, 0, 59075));
                     this.iClientLogger.command(id);
 

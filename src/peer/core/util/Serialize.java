@@ -137,45 +137,41 @@ public class Serialize implements OutputProtocol {
         this.byteBuffer.flip();
     }
 
-
     @Override
-    public void commandeFileFragment(int id, Fragment fragment) throws IOException {
-        this.byteBuffer.clear();
-        this.byteBuffer.put((byte) id);
+    public void commandeFileFragment(int id, Fragment fragment) {
+        this.byteBuffer
+                .clear()
+                .put((byte) id);
         ByteBuffer buffer1 = CHARSET.encode(fragment.getFileName());
-        this.byteBuffer.putInt(buffer1.remaining());
-        this.byteBuffer.put(buffer1);
-        this.byteBuffer.putLong(fragment.getSizeFile());
-        this.byteBuffer.putLong(fragment.getPointer());
-        this.byteBuffer.putInt(fragment.getFragment());
-        this.byteBuffer.flip();
-
+        this.byteBuffer
+                .putInt(buffer1.remaining())
+                .put(buffer1)
+                .putLong(fragment.getSizeFile())
+                .putLong(fragment.getPointer())
+                .putInt(fragment.getFragment())
+                .flip();
     }
 
     @Override
     public void commandeSendFileFragment(int id, Fragment fragment) throws IOException {
-
-        byte[] blobFile = new byte[(int)fragment.getSizeFile()];
-        FileInputStream inputStream = new FileInputStream(Folder.PATH+"/"+fragment.getFileName());
+        System.out.println(fragment);
+        byte[] blobFile = new byte[(int) fragment.getSizeFile()];
+        FileInputStream inputStream = new FileInputStream(Folder.PATH + "/" + fragment.getFileName());
         ByteBuffer buffer3 = CHARSET.encode(fragment.getFileName());
-        inputStream.read(blobFile,(int)fragment.getPointer(),fragment.getFragment());
+        inputStream.read(blobFile, (int) fragment.getPointer(), fragment.getFragment());
 
         this.byteBuffer
                 .clear()
-                .put((byte)id)
+                .put((byte) id)
                 .putInt(buffer3.remaining())
                 .put(buffer3)
                 .putLong(fragment.getSizeFile())
                 .putLong(fragment.getPointer())
                 .putInt(fragment.getFragment());
-        for(int i = 0; i < fragment.getFragment() ; i++) {
-
+        for (int i = 0; i < fragment.getFragment(); i++) {
             this.byteBuffer.put(blobFile[i]);
-
         }
-
         this.byteBuffer.flip();
-
     }
 
 
