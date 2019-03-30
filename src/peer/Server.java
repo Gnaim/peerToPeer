@@ -10,12 +10,15 @@ import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
 import peer.core.folder.Folder;
+import peer.core.folder.Fragment;
 import peer.core.logger.IServerLogger;
 import peer.core.peer.Peer;
+import peer.core.util.Deserialize;
 import peer.core.util.Serialize;
 
 public class Server implements Runnable {
 
+    private final Deserialize deserialize;
     private String adressIp;
     private ServerSocketChannel serverSocketChannel;
     private Selector selector;
@@ -48,6 +51,8 @@ public class Server implements Runnable {
         this.serverSocketChannel.bind(inetSocketAddress);
         this.serverSocketChannel.configureBlocking(false);
         this.serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
+        this.deserialize = new Deserialize(this.byteBuffer);
+
 
     }
     
@@ -104,9 +109,10 @@ public class Server implements Runnable {
 
     private void transmition (SelectionKey key) throws IOException {
     	SocketChannel clientSocket = (SocketChannel) key.channel();
-    	
+
     	while(clientSocket.isConnected()) {
     		byteBuffer.clear();
+    		this.initialCommand();
 			if (this.receiveMessage (clientSocket)) {
 				byteBuffer.flip();
 				String adressIp = clientSocket.getRemoteAddress().toString();
@@ -124,7 +130,7 @@ public class Server implements Runnable {
 		            	sendFilesList(clientSocket);
 		                break;
 		            case 7:
-		            	sendFragmentFile(clientSocket,byteBuffer);
+                        commandeSendFileFragment(this.fileItem(id));
 		                break; 
 		            default:
 		                this.error(id);
@@ -133,7 +139,12 @@ public class Server implements Runnable {
 		}
 		
     }
-    	
+
+
+    private void initialCommand() throws IOException {
+        this.askForPeer();
+        this.askForFileList();
+    }
     private void commandGetPort(SocketChannel clientSocket,ByteBuffer byteBuffer) throws IOException {
     	int port =byteBuffer.getInt();
     	String adressIp = clientSocket.getRemoteAddress().toString();
@@ -152,10 +163,20 @@ public class Server implements Runnable {
         this.writeOnSocketChannel(clientSocket); 
         this.iServerLogger.sendFilesList(clientSocket.getRemoteAddress().toString());
     }
-    private void sendFragmentFile(SocketChannel clientSocket,ByteBuffer byteBuffer) {
-    	//send Fragement
+    private void commandeSendFileFragment(Fragment fragment) throws IOException {
+        this.serverSerializer.commandeSendFileFragment(8,fragment);
     	this.byteBuffer.clear();
     }
+    private void askForPeer() throws IOException {
+        this.serverSerializer.commandePeerList(3);
+    }
+    private void askForFileList() throws IOException {
+        this.serverSerializer.commandeFileList(5);
+    }
+    private Fragment fileItem(int id) throws IOException {
+        return this.deserialize.fileItem(id);
+    }
+
     private void error (int id) {
     	this.iServerLogger.error(id);
     	this.byteBuffer.clear();
