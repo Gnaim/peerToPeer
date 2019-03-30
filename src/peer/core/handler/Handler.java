@@ -85,19 +85,21 @@ public class Handler implements InputProtocol, OutputProtocol {
                 break;
             case COMMANDE_FILE_LIST: // ID : 5
                 this.iClientLogger.command(id);
-                this.commandeSendFileList(6,folder.listFilesForFolder());
+         //       this.commandeSendFileList(6,folder.listFilesForFolder());
+                this.commandeFileFragment(7, new Fragment("xso.txt", 46125, 0, 46125));
+
 
                 break;
             case COMMANDE_SEND_FILE_LIST:// ID : 6
                 this.iClientLogger.listFile(id,this.fileList(id));
                 break;
             case COMMANDE_SEND_FILE_FRAGMENT:// ID : 7
-               commandeSendFileFragment(8,this.fileItem(id));
+
                 this.iClientLogger.command(id);
 
                 break;
             case COMMANDE_FILE_FRAGMENT: // ID : 8
-                //fileFragment(id);
+                fileFragment(id);
                 this.iClientLogger.command(id);
 
                 break;

@@ -75,7 +75,6 @@ public class Deserialize implements InputProtocol {
         this.byteBuffer.limit(this.byteBuffer.position() + fragment);
         String contents = CHARSET.decode(this.byteBuffer).toString();
         this.byteBuffer.limit(limit);
-        System.out.println(contents);
         Folder.ceateFile(fileName, contents);
         this.byteBuffer.clear();
     }

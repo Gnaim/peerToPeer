@@ -141,7 +141,16 @@ public class Serialize implements OutputProtocol {
 
     @Override
     public void commandeFileFragment(int id, Fragment fragment) throws IOException {
-        //impelemnts
+        this.byteBuffer.clear();
+        this.byteBuffer.put((byte) id);
+        ByteBuffer buffer1 = CHARSET.encode(fragment.getFileName());
+        this.byteBuffer.putInt(buffer1.remaining());
+        this.byteBuffer.put(buffer1);
+        this.byteBuffer.putLong(fragment.getSizeFile());
+        this.byteBuffer.putLong(fragment.getPointer());
+        this.byteBuffer.putInt(fragment.getFragment());
+        this.byteBuffer.flip();
+
     }
 
 
