@@ -1,5 +1,9 @@
 package peer.core.logger;
 
+import peer.core.peer.Peer;
+
+import java.util.ArrayList;
+
 public interface ServerLogger {
     void serverStarting(int port);
 
@@ -20,6 +24,8 @@ public interface ServerLogger {
 	void sendFilesList(String ip);
 
 	void separator();
+
+	void listPeer(int id, ArrayList<Peer> peerList);
 
 
 
