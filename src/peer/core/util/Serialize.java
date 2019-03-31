@@ -1,5 +1,6 @@
 package peer.core.util;
 
+import peer.Client;
 import peer.core.folder.File;
 import peer.core.folder.Folder;
 import peer.core.folder.Fragment;

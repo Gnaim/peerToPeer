@@ -2,6 +2,7 @@
 import java.io.IOException;
 
 import peer.Client;
+import peer.core.ClientGui;
 
 public class Main {
 
@@ -12,9 +13,9 @@ public class Main {
         ).start();*/
         new Thread(
                 //   new Client("176-132-200-49.abo.bbox.fr",8080)
-                new Client("prog-reseau-m1.lacl.fr", 5486)
+                new Client("127.0.0.1", 1337)
         ).start();
 
-
+//        new ClientGui();
     }
 }

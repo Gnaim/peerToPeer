@@ -10,7 +10,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
 
-public class Client implements Runnable {
+public class Client implements Runnable,ClientPeer {
 
     private int serverPort;
     private Handler handler;
@@ -18,10 +18,12 @@ public class Client implements Runnable {
     private ByteBuffer byteBuffer;
     private SocketChannel socketChannel;
 
+    public static int BYTEBYFFER_SIZE = 700000;
+
     public Client(String serverAddress, int serverPort) {
         this.serverPort = serverPort;
         this.serverAddress = serverAddress;
-        this.byteBuffer = ByteBuffer.allocate(1000536);
+        this.byteBuffer = ByteBuffer.allocate(BYTEBYFFER_SIZE);
         this.handler = new Handler(this);
     }
 
@@ -42,7 +44,6 @@ public class Client implements Runnable {
             while (this.socketChannel.isConnected()) {
                 if (this.socketChannel.read(this.byteBuffer) > 0) {
                     this.handler.start();
-                    //new RepeatKeyboard(this.socketChannel).run();
                 } else
                     this.socketChannel.close();
             }
