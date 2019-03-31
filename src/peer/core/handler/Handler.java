@@ -1,14 +1,13 @@
 package peer.core.handler;
 
 import peer.Client;
-import peer.ClientPeer;
-import peer.ClientSession;
-import peer.core.ClientGui;
-import peer.core.folder.File;
-import peer.core.folder.Folder;
-import peer.core.folder.Fragment;
+import peer.core.util.ClientPeer;
+import peer.core.util.ClientSession;
+import peer.core.util.folder.File;
+import peer.core.util.folder.Folder;
+import peer.core.util.folder.Fragment;
 import peer.core.logger.ILogger;
-import peer.core.peer.Peer;
+import peer.core.util.peer.Peer;
 import peer.core.protocol.InputProtocol;
 import peer.core.protocol.OutputProtocol;
 import peer.core.util.Deserialize;
@@ -135,8 +134,7 @@ public class Handler implements InputProtocol, OutputProtocol {
 
     @Override
     public String message(int id) throws IOException {
-        var message = this.deserialize.message(id);
-        return message;
+        return this.deserialize.message(id);
     }
 
     @Override

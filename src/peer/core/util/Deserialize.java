@@ -1,10 +1,10 @@
 package peer.core.util;
 
-import peer.core.folder.File;
-import peer.core.folder.Folder;
-import peer.core.folder.Fragment;
+import peer.core.util.folder.File;
+import peer.core.util.folder.Folder;
+import peer.core.util.folder.Fragment;
 import peer.core.handler.Handler;
-import peer.core.peer.Peer;
+import peer.core.util.peer.Peer;
 import peer.core.protocol.InputProtocol;
 
 import java.io.IOException;
@@ -13,7 +13,7 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 
 public class Deserialize implements InputProtocol {
-    static final Charset CHARSET = Charset.forName("UTF-8");
+    private static final Charset CHARSET = Charset.forName("UTF-8");
     private ByteBuffer byteBuffer;
 
     public Deserialize(ByteBuffer byteBuffer) {

@@ -1,6 +1,7 @@
 package peer;
 
 import peer.core.handler.Handler;
+import peer.core.util.ClientPeer;
 import peer.core.util.RepeatKeyboard;
 
 import java.io.IOException;
@@ -10,7 +11,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
 
-public class Client implements Runnable,ClientPeer {
+public class Client implements Runnable, ClientPeer {
 
     private int serverPort;
     private Handler handler;

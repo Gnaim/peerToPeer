@@ -1,4 +1,4 @@
-package peer.core.folder;
+package peer.core.util.folder;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -23,10 +23,10 @@ public class Folder {
         fos.close();
     }
 
-    public ArrayList<peer.core.folder.File> listFilesForFolder() {
-        ArrayList<peer.core.folder.File> files = new ArrayList<>();
+    public ArrayList<peer.core.util.folder.File> listFilesForFolder() {
+        ArrayList<peer.core.util.folder.File> files = new ArrayList<>();
         for (final File fileEntry : folder.listFiles()) {
-            files.add(new peer.core.folder.File(fileEntry.getName(), fileEntry.length()));
+            files.add(new peer.core.util.folder.File(fileEntry.getName(), fileEntry.length()));
         }
         return files;
     }

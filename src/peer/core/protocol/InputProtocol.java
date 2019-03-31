@@ -1,9 +1,9 @@
 package peer.core.protocol;
 
 
-import peer.core.folder.File;
-import peer.core.folder.Fragment;
-import peer.core.peer.Peer;
+import peer.core.util.folder.File;
+import peer.core.util.folder.Fragment;
+import peer.core.util.peer.Peer;
 
 import java.io.IOException;
 import java.util.ArrayList;

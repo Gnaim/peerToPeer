@@ -1,8 +1,8 @@
-package peer;
+package peer.core.util;
 
 import java.nio.channels.SocketChannel;
 
 public interface ClientPeer {
 
-    public SocketChannel getSocketChannel();
+     SocketChannel getSocketChannel();
 }

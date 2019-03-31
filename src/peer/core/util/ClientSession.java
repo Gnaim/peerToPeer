@@ -1,8 +1,8 @@
-package peer;
+package peer.core.util;
 
+import peer.Server;
 import peer.core.handler.Handler;
 
-import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.SocketChannel;
@@ -13,16 +13,12 @@ public class ClientSession implements ClientPeer {
     private ByteBuffer byteBuffer;
     private Handler handler;
 
-    ClientSession(SelectionKey selectionKey, SocketChannel socketChannel) throws Throwable {
+    public ClientSession(SelectionKey selectionKey, SocketChannel socketChannel) throws Throwable {
         this.selectionKey = selectionKey;
         this.socketChannel = (SocketChannel) socketChannel.configureBlocking(false);
         this.byteBuffer = ByteBuffer.allocateDirect(64);
-        this.handler= new Handler(this);
+        this.handler = new Handler(this);
 
-    }
-
-    public SelectionKey getSelectionKey() {
-        return selectionKey;
     }
 
     void disconnect() {
@@ -36,20 +32,21 @@ public class ClientSession implements ClientPeer {
 
             System.out.println("bye bye " + socketChannel.getRemoteAddress());
             socketChannel.close();
-        } catch (Throwable t) { /** quietly ignore  */ }
+        } catch (Throwable t) { /** quietly ignore  */}
     }
 
     public ByteBuffer getByteBuffer() {
         return byteBuffer;
     }
 
-    private boolean init = true;
-    void read() {
+    public void read() {
         try {
             int status = -1;
 
-            try { status = socketChannel.read(byteBuffer.clear());
-            } catch (Throwable t) { }
+            try {
+                status = socketChannel.read(byteBuffer.clear());
+            } catch (Throwable t) {
+            }
 
             if (status == -1)
                 disconnect();

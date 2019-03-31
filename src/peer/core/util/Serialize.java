@@ -1,11 +1,9 @@
 package peer.core.util;
 
-import peer.Client;
-import peer.core.folder.File;
-import peer.core.folder.Folder;
-import peer.core.folder.Fragment;
-import peer.core.handler.Handler;
-import peer.core.peer.Peer;
+import peer.core.util.folder.File;
+import peer.core.util.folder.Folder;
+import peer.core.util.folder.Fragment;
+import peer.core.util.peer.Peer;
 import peer.core.protocol.OutputProtocol;
 
 import java.io.FileInputStream;
@@ -21,53 +19,6 @@ public class Serialize implements OutputProtocol {
 
     public Serialize(ByteBuffer byteBuffer) {
         this.byteBuffer = byteBuffer;
-    }
-
-    public void commandID(int ID) {
-        this.byteBuffer
-                .clear()
-                .put((byte) ID)
-                .flip();
-    }
-
-    public void commandPeerList(ArrayList<Peer> peer) {
-        this.byteBuffer.clear()
-                .put((byte) Handler.COMMANDE_SEND_PEER_LIST)
-                .putInt(peer.size());
-        for (Peer p : peer) {
-            this.byteBuffer.putInt(p.getPort());
-            ByteBuffer buffer1 = CHARSET.encode(p.getAddress());
-            this.byteBuffer
-                    .putInt(buffer1.remaining())
-                    .put(buffer1);
-        }
-        this.byteBuffer.flip();
-    }
-
-    public void commandFileList(ArrayList<File> files) {
-        this.byteBuffer
-                .clear()
-                .put((byte) Handler.COMMANDE_SEND_FILE_LIST)
-                .putInt(files.size());
-        for (File f : files) {
-            ByteBuffer buffer1 = CHARSET.encode(f.getName());
-            this.byteBuffer
-                    .putInt(buffer1.remaining())
-                    .put(buffer1)
-                    .putLong(f.getSize());
-        }
-        this.byteBuffer.flip();
-    }
-
-    public void sendIp(String serverName, String ip) {
-        this.byteBuffer
-                .clear()
-                .put((byte) 1);
-        ByteBuffer buffer = CHARSET.encode("You are message from: " + serverName + ip);
-        this.byteBuffer
-                .putInt(buffer.remaining())
-                .put(buffer)
-                .flip();
     }
 
     @Override

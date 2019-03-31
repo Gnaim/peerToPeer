@@ -1,5 +1,7 @@
 package peer;
 
+import peer.core.util.ClientSession;
+
 import java.net.InetSocketAddress;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
@@ -13,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 
 public class Server {
 
-    static HashMap<SelectionKey, ClientSession> clientMap = new HashMap<>();
+    public static HashMap<SelectionKey, ClientSession> clientMap = new HashMap<>();
     private ServerSocketChannel serverChannel;
     private Selector selector;
     private SelectionKey selectionKey;
@@ -53,7 +55,7 @@ public class Server {
 
                     System.out.println("New client ip=" + acceptedChannel.getRemoteAddress() + ", total clients=" + Server.clientMap.size());
                     List keys = new ArrayList(clientMap.keySet());
-
+                        //Todo add init message
 
                         clientMap.get(keys.get(0)).getByteBuffer().clear().putInt(1).putInt(0).flip();
                         clientMap.get(keys.get(0)).getSocketChannel().write(clientMap.get(keys.get(0)).getByteBuffer());
@@ -61,12 +63,12 @@ public class Server {
                 }
 
                 if (key.isReadable()) {
-                    ClientSession sesh = clientMap.get(key);
+                    ClientSession clientSession = clientMap.get(key);
 
-                    if (sesh == null)
+                    if (clientSession == null)
                         continue;
 
-                    sesh.read();
+                    clientSession.read();
                 }
 
             } catch (Throwable t) {
