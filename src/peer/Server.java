@@ -2,6 +2,7 @@ package peer;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
@@ -68,8 +69,9 @@ public class Server implements Runnable {
 		SocketChannel socketChannel = serverSocketChannel.accept();
         byteBuffer.clear();
         this.commandMessage(socketChannel, "Reference Implementation 🚀 ");
-        this.SendIp(socketChannel, this.adressIp); 
-		socketChannel.configureBlocking(false);
+        this.SendIp(socketChannel, this.adressIp);
+     //   this.initialCommand(socketChannel);
+        socketChannel.configureBlocking(false);
 		socketChannel.register(selector, SelectionKey.OP_READ);
         iServerLogger.clientConnected(socketChannel.getRemoteAddress().toString());
     }
@@ -82,7 +84,7 @@ public class Server implements Runnable {
                 selector.select();
                 for (SelectionKey k : selector.selectedKeys()) {
                     if (k.isAcceptable())
-                    { 
+                    {
 	                        this.accept();}
                     else
                         this.transmition(k);
@@ -106,47 +108,55 @@ public class Server implements Runnable {
         }
         iServerLogger.serverClosing();
     }
-    
+
 
     private void transmition (SelectionKey key) throws IOException {
     	SocketChannel clientSocket = (SocketChannel) key.channel();
 
-    	while(true) {
+        for(SelectionKey s: selector.keys()) {
 
-     //       this.initialCommand(clientSocket);
+                if (this.receiveMessage(clientSocket)) {
 
-            if (this.receiveMessage (clientSocket)) {
+                    byteBuffer.flip();
+                    String adressIp = clientSocket.getRemoteAddress().toString();
+                    int id = byteBuffer.get();
+                    this.iServerLogger.clientSentCommand(adressIp, Integer.toString(id));
+                    commandExecuteID(id,clientSocket);
 
-                byteBuffer.flip();
-				String adressIp = clientSocket.getRemoteAddress().toString();
-				int id = byteBuffer.get();
-				this.iServerLogger.clientSentCommand(adressIp, Integer.toString(id));
-				byteBuffer.clear();
-				  switch (id) {
-		            case 2: 
-		            	commandGetPort(clientSocket,byteBuffer);
-		                break;
-		            case 3: 
-		            	sendPeersList(clientSocket);
-		                break;
-                    case 4:
-                        this.iServerLogger.listPeer(id,this.peerList(id));
-                        break;
-		            case 5:
-		            	sendFilesList(clientSocket);
-		                break;
-		            case 7:
-                        commandeSendFileFragment(this.fileItem(id));
-		                break; 
-		            default:
-		                this.error(id);
-				  }
-			}
-		}
-		
+                }
+            }
+
     }
 
+    private void commandExecuteID (int id, SocketChannel clientSocket) throws IOException {
 
+        switch (id) {
+            case 2:
+                commandGetPort(clientSocket, byteBuffer);
+                break;
+            case 3:
+          //      manyIdCheck(clientSocket);
+                sendPeersList(clientSocket);
+                break;
+            case 4:
+                this.iServerLogger.listPeer(id, this.peerList(id));
+                break;
+            case 5:
+           //     manyIdCheck(clientSocket);
+                sendFilesList(clientSocket);
+                break;
+            case 7:
+                commandeSendFileFragment(this.fileItem(id));
+                break;
+            default:
+                this.error(id);
+        }
+    }
+    private void manyIdCheck (SocketChannel clientSocket) throws IOException {
+        if (this.byteBuffer.capacity()>0){
+            this.commandExecuteID(this.byteBuffer.getInt(),clientSocket);
+        }
+    }
     private void initialCommand(SocketChannel clientSocket) throws IOException {
         this.askForPeerList(clientSocket);
         this.askForFileList(clientSocket);
@@ -190,7 +200,6 @@ public class Server implements Runnable {
     }
     private void askForFileList(SocketChannel clientSocket) throws IOException {
         this.byteBuffer.clear();
-        System.out.println("Server : ask for file list");
         this.byteBuffer.put((byte)5);
         this.byteBuffer.flip();
         clientSocket.write(this.byteBuffer);
