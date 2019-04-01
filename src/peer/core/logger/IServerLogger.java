@@ -1,6 +1,11 @@
-package peer.logger;
+package peer.core.logger;
 
-public class IServerLogger implements ServerLogger {
+
+import peer.core.peer.Peer;
+
+import java.util.ArrayList;
+
+public class IServerLogger implements ServerLogger  {
 
     @Override
     public void serverStarting(int port) {
@@ -25,7 +30,7 @@ public class IServerLogger implements ServerLogger {
 
     @Override
     public void clientConnected(String ip) {
-        System.out.println("client: [" + ip.split("/")[1] + "] connected");
+        System.out.println("client: [" + ip.split("/")[1] + "] message");
     }
     
     @Override
@@ -48,6 +53,20 @@ public class IServerLogger implements ServerLogger {
         this.separator();
         System.out.println("ERROR serveur send : " + id);
     }
+    @Override
+    public void listPeer(int id, ArrayList<Peer> peers) {
+        System.out.print("[" + id + ", " + peers.size() + ", [ " );
+        // clientGui.getLogger().append("[" + id + ", " + peers.size() + ", [ " );
+        for (Peer p : peers){
+            //   clientGui.getLogger().append("[ " + p.getPort() + "," + p.getAddress() + " ]");
+
+            System.out.print("[ " + p.getPort() + "," + p.getAddress() + " ]");
+        }
+        //clientGui.getLogger().append("]]"+"\n");
+
+
+        System.out.println(" ] ]");
+    }
 
 	@Override
 	public void separator() {
@@ -55,5 +74,6 @@ public class IServerLogger implements ServerLogger {
 		
 	}
 
-    
+
+
 }

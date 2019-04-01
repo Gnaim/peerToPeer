@@ -1,4 +1,4 @@
-package peer.peer;
+package peer.core.peer;
 
 public class Peer {
     private int port;
@@ -15,5 +15,15 @@ public class Peer {
 
     public String getAddress() {
         return address;
+    }
+
+    @Override
+    public String toString() {
+        return address+port;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj.toString().equals(address+port) ;
     }
 }
