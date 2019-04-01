@@ -1,6 +1,7 @@
 package peer.core.handler;
 
 import peer.Client;
+import peer.core.gui.clientGui.ClientGui;
 import peer.core.util.ClientPeer;
 import peer.core.util.ClientSession;
 import peer.core.util.folder.File;
@@ -17,7 +18,6 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
-import static peer.core.util.Serialize.CHARSET;
 
 public class Handler implements InputProtocol, OutputProtocol {
 
@@ -48,6 +48,7 @@ public class Handler implements InputProtocol, OutputProtocol {
     private ILogger iClientLogger;
 
     private ArrayList<Peer> peers;
+    private ClientGui clientGui;
 
 
     private Folder folder;
@@ -60,6 +61,7 @@ public class Handler implements InputProtocol, OutputProtocol {
         this.client = client;
         this.folder = new Folder();
         this.peers = new ArrayList<>();
+        clientGui = new ClientGui(this);
     }
 
     public Handler(ClientSession client) {
@@ -77,41 +79,64 @@ public class Handler implements InputProtocol, OutputProtocol {
             int id = this.byteBuffer.get();
             switch (id) {
                 case COMMANDE_MESSAGE: // ID : 1
+                    String message = this.message(id);
+                    if(clientGui != null)
+                        this.clientGui.log("[" + id + ", '" + message + "']");
                     this.iClientLogger.command(id);
-                    this.iClientLogger.message(id, this.message(id));
+                    this.iClientLogger.message(id, message);
                     break;
                 case COMMANDE_DECLARE_PORT: // ID : 2
                     this.iClientLogger.command(id);
-                    this.iClientLogger.declarePort(id, declarePort(id)); //todo add method
+                    int declarePort = declarePort(id);
+                    if(clientGui != null)
+                        this.clientGui.declarePort(id,declarePort);
+                    this.iClientLogger.declarePort(id, declarePort);
+                    //todo add method
                     break;
                 case COMMANDE_PEER_LIST: // ID : 3
                     this.iClientLogger.command(id);
+                    if(clientGui != null)
+                        this.clientGui.command(id);
                     this.commandeSendPeerList(4,peers);
                     break;
                 case COMMANDE_SEND_PEER_LIST: // ID : 4
                     this.iClientLogger.command(id);
-                    this.iClientLogger.listPeer(id, this.peerList(id));
-                    break;
+                    var peersList = this.peerList(id);
+                    this.iClientLogger.listPeer(id, peersList);
+                    if(clientGui != null)
+                        this.clientGui.listPeer(id,peersList);
+                        break;
                 case COMMANDE_FILE_LIST: // ID : 5
                     this.iClientLogger.command(id);
+                    if(clientGui != null)
+                        this.clientGui.command(id);
                     this.commandeSendFileList(6, folder.listFilesForFolder());
                     break;
                 case COMMANDE_SEND_FILE_LIST:// ID : 6
                     this.iClientLogger.command(id);
-                    this.iClientLogger.listFile(id, this.fileList(id));
+                    var filelist = this.fileList(id);
+                    if(clientGui != null)
+                        this.clientGui.listFile(id,filelist);
+                    this.iClientLogger.listFile(id, filelist);
                     break;
                 case COMMANDE_SEND_FILE_FRAGMENT:// ID : 7
                     this.iClientLogger.command(id);
+                    if(clientGui != null)
+                        this.clientGui.command(id);
                     this.commandeSendFileFragment(8,this.fileItem(id));
-                    this.iClientLogger.command(id);
                     break;
                 case COMMANDE_FILE_FRAGMENT: // ID : 8
                     this.fileFragment(id);
                     this.iClientLogger.command(id);
+                    if(clientGui != null)
+                        this.clientGui.command(id);
                     break;
-                default: // ID : 1
+                default: // ID : Error
                     this.commandeMessage(1,"Error : unknown id = [ " + id + " ]");
                     this.iClientLogger.error(id);
+                    if(clientGui != null)
+                        this.clientGui.error(id);
+
             }
         this.byteBuffer.clear();
     }

@@ -16,4 +16,9 @@ public class File {
     public long getSize() {
         return size;
     }
+
+    @Override
+    public String toString() {
+        return name+size;
+    }
 }

@@ -37,9 +37,9 @@ public class Serialize implements OutputProtocol {
     public void commandeDeclarePort(int id, int port) {
         this.byteBuffer
                 .clear()
-                .putInt(id)
-                .put((byte) port)
-                .putInt(port).flip();
+                .put((byte)id)
+                .putInt( port)
+                .flip();
     }
 
     @Override

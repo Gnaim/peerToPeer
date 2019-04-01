@@ -13,9 +13,7 @@ public class Main {
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         }
-        new Thread(
-                new Client("127.0.0.1", 1337)
-        ).start();
+
 
     }
 }
