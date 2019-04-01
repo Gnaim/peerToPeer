@@ -80,7 +80,6 @@ public class Deserialize implements InputProtocol {
         Folder.ceateFile(fileName, contents);
         this.byteBuffer.clear();
         //just fot test
-         Handler.getFollowingData = false;
     }
 
     @Override

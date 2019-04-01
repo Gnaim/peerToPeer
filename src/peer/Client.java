@@ -2,7 +2,6 @@ package peer;
 
 import peer.core.handler.Handler;
 import peer.core.util.ClientPeer;
-import peer.core.util.RepeatKeyboard;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -41,7 +40,6 @@ public class Client implements Runnable, ClientPeer {
             SocketAddress socketAddress = new InetSocketAddress(this.serverAddress, this.serverPort);
             this.socketChannel = SocketChannel.open();
             this.socketChannel.connect(socketAddress);
-            new Thread(new RepeatKeyboard(this.socketChannel)).start();
             while (this.socketChannel.isConnected()) {
                 if (this.socketChannel.read(this.byteBuffer) > 0) {
                     this.handler.start();
