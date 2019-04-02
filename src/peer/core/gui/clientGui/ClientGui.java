@@ -4,6 +4,7 @@ import peer.Client;
 import peer.Server;
 import peer.core.handler.Handler;
 import peer.core.logger.Logger;
+import peer.core.util.ComboItem;
 import peer.core.util.folder.File;
 import peer.core.util.folder.Fragment;
 import peer.core.util.peer.Peer;
@@ -180,18 +181,3 @@ public class ClientGui extends JFrame implements Logger {
 
 }
 
-class ComboItem extends Component {
-    private String key;
-    private String value;
-
-    public ComboItem(String key, String value) {
-        this.key = key;
-        this.value = value;
-    }
-
-    @Override
-    public String toString() {
-        return key;
-    }
-
-}

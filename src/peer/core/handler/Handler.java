@@ -216,8 +216,30 @@ public class Handler implements InputProtocol, OutputProtocol {
 
     @Override
     public void commandeFileFragment(int id, Fragment fragment) throws IOException {
-            this.serialize.commandeFileFragment(id, fragment);
-            writeOnSocketChannel();
+
+        if(fragment.getSizeFile() <= Client.BYTEBYFFER_SIZE){
+            Fragment f = new Fragment(fragment.getFileName(),fragment.getSizeFile(),0,(int)fragment.getSizeFile());
+            System.out.println(f);
+          //  this.serialize.commandeFileFragment(id, f);
+          //  writeOnSocketChannel();
+        }else{
+            int round = (int)fragment.getSizeFile()/Client.BYTEBYFFER_SIZE;
+            int mod = (int)fragment.getSizeFile() % Client.BYTEBYFFER_SIZE;
+            int i ;
+            for ( i = 0; i <= round-1; i++){
+                Fragment f = new Fragment(fragment.getFileName(),fragment.getSizeFile(),i*Client.BYTEBYFFER_SIZE,Client.BYTEBYFFER_SIZE);
+                System.out.println(f);
+           //     this.serialize.commandeFileFragment(id, f);
+           //     writeOnSocketChannel();
+            }
+            if (mod != 0){
+                Fragment f = new Fragment(fragment.getFileName(),fragment.getSizeFile(),i*Client.BYTEBYFFER_SIZE,mod);
+                System.out.println(f);
+           //     this.serialize.commandeFileFragment(id, f);
+           //     writeOnSocketChannel();
+            }
+        }
+
     }
 
     @Override
