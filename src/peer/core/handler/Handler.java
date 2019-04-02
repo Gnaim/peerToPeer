@@ -3,7 +3,6 @@ package peer.core.handler;
 import peer.Client;
 import peer.core.gui.clientGui.ClientGui;
 import peer.core.util.ClientPeer;
-import peer.core.util.ClientSession;
 import peer.core.util.folder.File;
 import peer.core.util.folder.Folder;
 import peer.core.util.folder.Fragment;
@@ -64,15 +63,6 @@ public class Handler implements InputProtocol, OutputProtocol {
         clientGui = new ClientGui(this);
     }
 
-    public Handler(ClientSession client) {
-        this.byteBuffer = client.getByteBuffer();
-        this.iClientLogger = new ILogger();
-        this.serialize = new Serialize(this.byteBuffer);
-        this.deserialize = new Deserialize(this.byteBuffer);
-        this.folder = new Folder();
-        this.peers = new ArrayList<>();
-        this.client = client;
-    }
 
     public void start() throws IOException {
         this.byteBuffer.flip();

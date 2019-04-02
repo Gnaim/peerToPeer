@@ -2,7 +2,6 @@ package peer;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.net.Socket;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
@@ -10,12 +9,12 @@ import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
-import peer.core.folder.Folder;
-import peer.core.folder.Fragment;
 import peer.core.logger.IServerLogger;
-import peer.core.peer.Peer;
 import peer.core.util.Deserialize;
 import peer.core.util.Serialize;
+import peer.core.util.folder.Folder;
+import peer.core.util.folder.Fragment;
+import peer.core.util.peer.Peer;
 
 public class Server implements Runnable {
 

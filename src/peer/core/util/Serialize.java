@@ -20,6 +20,53 @@ public class Serialize implements OutputProtocol {
     public Serialize(ByteBuffer byteBuffer) {
         this.byteBuffer = byteBuffer;
     }
+    public void commandID(int ID) {
+        this.byteBuffer
+                .clear()
+                .put((byte) ID)
+                .flip();
+    }
+
+    public void commandPeerList(ArrayList<Peer> peer) {
+        this.byteBuffer.clear()
+                .put((byte) 4)
+                .putInt(peer.size());
+        for (Peer p : peer) {
+            this.byteBuffer.putInt(p.getPort());
+            ByteBuffer buffer1 = CHARSET.encode(p.getAddress());
+            this.byteBuffer
+                    .putInt(buffer1.remaining())
+                    .put(buffer1);
+        }
+        this.byteBuffer.flip();
+    }
+
+    public void commandFileList(ArrayList<File> files) {
+        this.byteBuffer
+                .clear()
+                .put((byte) 6)
+                .putInt(files.size());
+        for (File f : files) {
+            ByteBuffer buffer1 = CHARSET.encode(f.getName());
+            this.byteBuffer
+                    .putInt(buffer1.remaining())
+                    .put(buffer1)
+                    .putLong(f.getSize());
+        }
+        this.byteBuffer.flip();
+    }
+
+    public void sendIp(String serverName, String ip) {
+        this.byteBuffer
+                .clear()
+                .put((byte) 1);
+        ByteBuffer buffer = CHARSET.encode("You are message from: " + serverName + ip);
+        this.byteBuffer
+                .putInt(buffer.remaining())
+                .put(buffer)
+                .flip();
+    }
+
 
     @Override
     public void commandeMessage(int id, String message) {
