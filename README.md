@@ -11,11 +11,11 @@ This project is a program that participates in a peer-to-peer file exchange netw
 What things you need to install the software and how to install them
 
 - Install **Intelij IDEA** *IDE* from [here](https://www.jetbrains.com/idea/).
-- Install **Java JDK - 1.8** from [here](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html).
+- Install **Java - 11** from [here](https://www.oracle.com/technetwork/java/javase/downloads/jdk11-downloads-5066655.html).
 
 
 
 ## Authors
 
-- Noureddine AMRANE [github](https://github.com/noukaza/) [webSite](https://noureddineamrane.com)
+- Noureddine AMRANE [github](https://github.com/noukaza/) | [WebSite](https://noureddineamrane.com)
 - Mohammed Naim Guerroui
