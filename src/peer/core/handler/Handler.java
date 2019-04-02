@@ -45,34 +45,33 @@ public class Handler implements InputProtocol, OutputProtocol {
 
     private Deserialize deserialize;
 
-    private ILogger iClientLogger;
+    private ILogger iLogger;
 
     private ArrayList<Peer> peers;
-    private ClientGui clientGui;
 
+    private ClientGui clientGui;
 
     private Folder folder;
 
     public Handler(Client client) {
         this.byteBuffer = client.getByteBuffer();
-        this.iClientLogger = new ILogger();
+        this.iLogger = new ILogger();
         this.serialize = new Serialize(this.byteBuffer);
         this.deserialize = new Deserialize(this.byteBuffer);
         this.client = client;
         this.folder = new Folder();
         this.peers = new ArrayList<>();
-        clientGui = new ClientGui(this);
+        this.clientGui = new ClientGui(this);
     }
 
     public Handler(ClientSession client) {
         this.byteBuffer = client.getByteBuffer();
-        this.iClientLogger = new ILogger();
+        this.iLogger = new ILogger();
         this.serialize = new Serialize(this.byteBuffer);
         this.deserialize = new Deserialize(this.byteBuffer);
         this.folder = new Folder();
         this.peers = new ArrayList<>();
         this.client = client;
-
     }
 
 
@@ -84,58 +83,57 @@ public class Handler implements InputProtocol, OutputProtocol {
                     String message = this.message(id);
                     if(clientGui != null)
                         this.clientGui.log("[" + id + ", '" + message + "']");
-                    this.iClientLogger.command(id);
-                    this.iClientLogger.message(id, message);
+                    this.iLogger.command(id);
+                    this.iLogger.message(id, message);
                     break;
                 case COMMANDE_DECLARE_PORT: // ID : 2
-                    this.iClientLogger.command(id);
+                    this.iLogger.command(id);
                     int declarePort = declarePort(id);
                     if(clientGui != null)
                         this.clientGui.declarePort(id,declarePort);
-                    this.iClientLogger.declarePort(id, declarePort);
-                    //todo add method
+                    this.iLogger.declarePort(id, declarePort);
                     break;
                 case COMMANDE_PEER_LIST: // ID : 3
-                    this.iClientLogger.command(id);
+                    this.iLogger.command(id);
                     if(clientGui != null)
                         this.clientGui.command(id);
                     this.commandeSendPeerList(4,peers);
                     break;
                 case COMMANDE_SEND_PEER_LIST: // ID : 4
-                    this.iClientLogger.command(id);
+                    this.iLogger.command(id);
                     var peersList = this.peerList(id);
-                    this.iClientLogger.listPeer(id, peersList);
+                    this.iLogger.listPeer(id, peersList);
                     if(clientGui != null)
                         this.clientGui.listPeer(id,peersList);
                         break;
                 case COMMANDE_FILE_LIST: // ID : 5
-                    this.iClientLogger.command(id);
+                    this.iLogger.command(id);
                     if(clientGui != null)
                         this.clientGui.command(id);
                     this.commandeSendFileList(6, folder.listFilesForFolder());
                     break;
                 case COMMANDE_SEND_FILE_LIST:// ID : 6
-                    this.iClientLogger.command(id);
+                    this.iLogger.command(id);
                     var filelist = this.fileList(id);
                     if(clientGui != null)
                         this.clientGui.listFile(id,filelist);
-                    this.iClientLogger.listFile(id, filelist);
+                    this.iLogger.listFile(id, filelist);
                     break;
                 case COMMANDE_SEND_FILE_FRAGMENT:// ID : 7
-                    this.iClientLogger.command(id);
+                    this.iLogger.command(id);
                     if(clientGui != null)
                         this.clientGui.command(id);
                     this.commandeSendFileFragment(8,this.fileItem(id));
                     break;
                 case COMMANDE_FILE_FRAGMENT: // ID : 8
                     this.fileFragment(id);
-                    this.iClientLogger.command(id);
+                    this.iLogger.command(id);
                     if(clientGui != null)
                         this.clientGui.command(id);
                     break;
                 default: // ID : Error
                     this.commandeMessage(1,"Error : unknown id = [ " + id + " ]");
-                    this.iClientLogger.error(id);
+                    this.iLogger.error(id);
                     if(clientGui != null)
                         this.clientGui.error(id);
 
@@ -150,8 +148,8 @@ public class Handler implements InputProtocol, OutputProtocol {
 
     @Override
     public int declarePort(int id) throws IOException {
-
-        String address = this.client.getSocketChannel().getRemoteAddress().toString().split("/")[0];
+        String address = (this.client.getSocketChannel().getRemoteAddress().toString().split("/")[1]);
+        address= address.split(":")[0];
         int port = this.deserialize.declarePort(id);
         Peer peer = new Peer(port, address);
         if (!this.peers.contains(peer))
