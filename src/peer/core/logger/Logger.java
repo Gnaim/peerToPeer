@@ -1,7 +1,7 @@
 package peer.core.logger;
 
-import peer.core.folder.File;
-import peer.core.peer.Peer;
+import peer.core.util.folder.File;
+import peer.core.util.peer.Peer;
 
 import java.util.ArrayList;
 
@@ -26,5 +26,5 @@ public interface Logger {
     void command(int id);
 
     void separator();
-    
+
 }

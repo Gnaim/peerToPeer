@@ -1,17 +1,15 @@
 package peer.core.util;
 
-import peer.core.folder.File;
-import peer.core.folder.Folder;
-import peer.core.folder.Fragment;
-import peer.core.peer.Peer;
+import peer.core.util.folder.File;
+import peer.core.util.folder.Folder;
+import peer.core.util.folder.Fragment;
+import peer.core.util.peer.Peer;
 import peer.core.protocol.OutputProtocol;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class Serialize implements OutputProtocol {
@@ -19,60 +17,12 @@ public class Serialize implements OutputProtocol {
 
     private ByteBuffer byteBuffer;
 
-
     public Serialize(ByteBuffer byteBuffer) {
         this.byteBuffer = byteBuffer;
     }
 
-    public void commandID(int ID) {
-        this.byteBuffer
-                .clear()
-                .put((byte) ID)
-                .flip();
-    }
-
-    public void commandPeerList(ArrayList<Peer> peer) {
-        this.byteBuffer.clear()
-                .put((byte) 4)
-                .putInt(peer.size());
-        for (Peer p : peer) {
-            this.byteBuffer.putInt(p.getPort());
-            ByteBuffer buffer1 = CHARSET.encode(p.getAddress());
-            this.byteBuffer
-                    .putInt(buffer1.remaining())
-                    .put(buffer1);
-        }
-        this.byteBuffer.flip();
-    }
-
-    public void commandFileList(ArrayList<File> files) {
-        this.byteBuffer
-                .clear()
-                .put((byte) 6)
-                .putInt(files.size());
-        for (File f : files) {
-            ByteBuffer buffer1 = CHARSET.encode(f.getName());
-            this.byteBuffer
-                    .putInt(buffer1.remaining())
-                    .put(buffer1)
-                    .putLong(f.getSize());
-        }
-        this.byteBuffer.flip();
-    }
-
-    public void sendIp(String serverName, String ip) {
-        this.byteBuffer
-                .clear()
-                .put((byte) 1);
-        ByteBuffer buffer = CHARSET.encode("You are message from: " + serverName + ip);
-        this.byteBuffer
-                .putInt(buffer.remaining())
-                .put(buffer)
-                .flip();
-    }
-
     @Override
-    public void commandeMessage(int id, String message) throws IOException {
+    public void commandeMessage(int id, String message) {
         this.byteBuffer
                 .clear()
                 .put((byte) id);
@@ -84,16 +34,16 @@ public class Serialize implements OutputProtocol {
     }
 
     @Override
-    public void commandeDeclarePort(int id, int port) throws IOException {
+    public void commandeDeclarePort(int id, int port) {
         this.byteBuffer
                 .clear()
-                .putInt(id)
-                .put((byte) port)
-                .putInt(port).flip();
+                .put((byte)id)
+                .putInt( port)
+                .flip();
     }
 
     @Override
-    public void commandePeerList(int id) throws IOException {
+    public void commandePeerList(int id) {
         this.byteBuffer
                 .clear()
                 .put((byte) id)
@@ -101,7 +51,7 @@ public class Serialize implements OutputProtocol {
     }
 
     @Override
-    public void commandeSendPeerList(int id, ArrayList<Peer> peers)  {
+    public void commandeSendPeerList(int id, ArrayList<Peer> peers) {
         this.byteBuffer.clear()
                 .put((byte) 4)
                 .putInt(peers.size());
@@ -140,50 +90,41 @@ public class Serialize implements OutputProtocol {
     }
 
     @Override
-    public void commandeFileFragment(int id, Fragment fragment) throws IOException {
-        this.byteBuffer.clear();
-        this.byteBuffer.put((byte) id);
+    public void commandeFileFragment(int id, Fragment fragment) {
+        this.byteBuffer
+                .clear()
+                .put((byte) id);
         ByteBuffer buffer1 = CHARSET.encode(fragment.getFileName());
-        this.byteBuffer.putInt(buffer1.remaining());
-        this.byteBuffer.put(buffer1);
-        this.byteBuffer.putLong(fragment.getSizeFile());
-        this.byteBuffer.putLong(fragment.getPointer());
-        this.byteBuffer.putInt(fragment.getFragment());
-        this.byteBuffer.flip();
-
+        this.byteBuffer
+                .putInt(buffer1.remaining())
+                .put(buffer1)
+                .putLong(fragment.getSizeFile())
+                .putLong(fragment.getPointer())
+                .putInt(fragment.getFragment())
+                .flip();
     }
 
-
+    @Override
     public void commandeSendFileFragment(int id, Fragment fragment) throws IOException {
-        System.out.println("the file demandee : "+fragment.getFileName());
-        System.out.println("the file size : "+fragment.getSizeFile());
-        System.out.println("the file pointer : "+fragment.getPointer());
-        System.out.println("the file fragment : "+fragment.getFragment());
-
-        byte[] blobFile = new byte[(int)fragment.getSizeFile()];
-        FileInputStream inputStream = new FileInputStream(Folder.PATH+"/"+fragment.getFileName());
+        System.out.println(fragment);
+        byte[] blobFile = new byte[(int) fragment.getSizeFile()];
+        FileInputStream inputStream = new FileInputStream(Folder.PATH + "/" + fragment.getFileName());
         ByteBuffer buffer3 = CHARSET.encode(fragment.getFileName());
-        inputStream.read(blobFile,(int)fragment.getPointer(),fragment.getFragment());
-
+        inputStream.read(blobFile, (int) fragment.getPointer(), fragment.getFragment());
 
         this.byteBuffer
                 .clear()
-                .put((byte)id)
+                .put((byte) id)
                 .putInt(buffer3.remaining())
                 .put(buffer3)
                 .putLong(fragment.getSizeFile())
                 .putLong(fragment.getPointer())
                 .putInt(fragment.getFragment());
-        for(int i = 0; i < fragment.getFragment() ; i++) {
-
+        for (int i = 0; i < fragment.getFragment(); i++) {
             this.byteBuffer.put(blobFile[i]);
-
         }
-
         this.byteBuffer.flip();
-
     }
-
 
 
 }

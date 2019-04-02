@@ -1,18 +1,19 @@
 package peer.core.util;
 
+import peer.core.util.folder.File;
+import peer.core.util.folder.Folder;
+import peer.core.util.folder.Fragment;
+import peer.core.handler.Handler;
+import peer.core.util.peer.Peer;
+import peer.core.protocol.InputProtocol;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 
-import peer.core.folder.File;
-import peer.core.folder.Folder;
-import peer.core.folder.Fragment;
-import peer.core.peer.Peer;
-import peer.core.protocol.InputProtocol;
-
 public class Deserialize implements InputProtocol {
-    static final Charset CHARSET = Charset.forName("UTF-8");
+    private static final Charset CHARSET = Charset.forName("UTF-8");
     private ByteBuffer byteBuffer;
 
     public Deserialize(ByteBuffer byteBuffer) {
@@ -43,7 +44,7 @@ public class Deserialize implements InputProtocol {
             String address = this.getString();
             peers.add(new Peer(port, address));
         }
-        peers.add(new Peer(5486,"prog-reseau-m1.lacl.fr"));
+        peers.add(new Peer(5486, "prog-reseau-m1.lacl.fr"));
         byteBuffer.clear();
         return peers;
     }
@@ -67,6 +68,7 @@ public class Deserialize implements InputProtocol {
 
     @Override
     public void fileFragment(int id) throws IOException {
+        System.out.println("test");
         String fileName = getString();
         long sizeFile = getLong();
         long pointer = getLong();
@@ -77,6 +79,7 @@ public class Deserialize implements InputProtocol {
         this.byteBuffer.limit(limit);
         Folder.ceateFile(fileName, contents);
         this.byteBuffer.clear();
+        //just fot test
     }
 
     @Override
@@ -86,7 +89,7 @@ public class Deserialize implements InputProtocol {
         long pointer = getLong();
         int fragment = getInt();
 
-        return new Fragment(fileName,sizeFile,pointer,fragment);
+        return new Fragment(fileName, sizeFile, pointer, fragment);
     }
 
     private int getInt() {

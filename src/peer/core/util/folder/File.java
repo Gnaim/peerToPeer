@@ -1,4 +1,4 @@
-package peer.core.folder;
+package peer.core.util.folder;
 
 public class File {
     private String name;
@@ -15,5 +15,10 @@ public class File {
 
     public long getSize() {
         return size;
+    }
+
+    @Override
+    public String toString() {
+        return name+size;
     }
 }
