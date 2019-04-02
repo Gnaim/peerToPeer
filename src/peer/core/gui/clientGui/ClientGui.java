@@ -34,7 +34,7 @@ public class ClientGui extends JFrame implements Logger {
         this.textField1.setEditable(false);
         this.logger.setEnabled(false);
         setLocation(200,200);
-        this.textField1.setText(Server.SERVER_PORT+"");
+        this.textField1.setText(1337+"");
         this.fileList = new ArrayList<>();
         this.handler = handler;
         peerButton.addActionListener(e -> {
@@ -53,7 +53,7 @@ public class ClientGui extends JFrame implements Logger {
 
         this.sendButton.addActionListener(e -> {
             try {
-                handler.commandeDeclarePort(Handler.COMMANDE_DECLARE_PORT, Server.SERVER_PORT);
+                handler.commandeDeclarePort(Handler.COMMANDE_DECLARE_PORT, 1337);
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
