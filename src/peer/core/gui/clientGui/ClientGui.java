@@ -3,6 +3,7 @@ package peer.core.gui.clientGui;
 import peer.core.handler.Handler;
 import peer.core.logger.Logger;
 import peer.core.util.folder.File;
+import peer.core.util.folder.Fragment;
 import peer.core.util.peer.Peer;
 
 import javax.swing.*;
@@ -29,6 +30,8 @@ public class ClientGui extends JFrame implements Logger {
         setSize(900, 800);
         setVisible(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.textField1.setEnabled(true);
+        this.textField1.setText(1337+"");
         this.fileList = new ArrayList<>();
         this.handler = handler;
         peerButton.addActionListener(e -> {
@@ -38,7 +41,7 @@ public class ClientGui extends JFrame implements Logger {
         this.messagButton.addActionListener(e -> {
             String message = messageField.getText();
             try {
-                handler.commandeMessage(1, message);
+                handler.commandeMessage(Handler.COMMANDE_MESSAGE, message);
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
@@ -47,21 +50,21 @@ public class ClientGui extends JFrame implements Logger {
         this.sendButton.addActionListener(e -> {
             int prot = 1234;
             try {
-                handler.commandeDeclarePort(2, prot);
+                handler.commandeDeclarePort(Handler.COMMANDE_DECLARE_PORT, prot);
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
         });
         this.fileButton.addActionListener(e -> {
             try {
-                handler.commandeFileList(5);
+                handler.commandeFileList(Handler.COMMANDE_FILE_LIST);
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
         });
         this.peerButton.addActionListener(e -> {
             try {
-                handler.commandePeerList(3);
+                handler.commandePeerList(Handler.COMMANDE_PEER_LIST);
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
@@ -70,7 +73,13 @@ public class ClientGui extends JFrame implements Logger {
             var tmp = listFile.getSelectedItem().toString().split(" : ");
             var fileName = tmp[0];
             var fileSize = tmp[1];
-            System.out.println(fileName + "- " + fileSize);
+            Fragment fragment = new Fragment(fileName,Long.getLong(fileSize),0,66530);
+            try {
+                this.handler.commandeFileFragment(Handler.COMMANDE_FILE_FRAGMENT, fragment);
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+//            System.out.println(fileName + "- " + fileSize);
         });
     }
 

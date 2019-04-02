@@ -152,10 +152,8 @@ public class Handler implements InputProtocol, OutputProtocol {
         String address = this.client.getSocketChannel().getRemoteAddress().toString().split("/")[0];
         int port = this.deserialize.declarePort(id);
         Peer peer = new Peer(port, address);
-
         if (!this.peers.contains(peer))
             this.peers.add(peer);
-
         return port;
     }
 
