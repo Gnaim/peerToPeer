@@ -76,22 +76,26 @@ public class ClientGui extends JFrame implements Logger {
             }
         });
         this.getFileButton.addActionListener(e -> {
-            var tmp = listFile.getSelectedItem().toString().split(" : ");
-            var fileName = tmp[0];
-            var fileSize = Integer.valueOf(tmp[1]);
-            Fragment fragment = new Fragment(fileName,fileSize,0,fileSize);
-            try {
-                this.handler.commandeFileFragment(7,fragment);
-            } catch (IOException e1) {
+            if (listFile.getItemCount() != 0){
+                var tmp = listFile.getSelectedItem().toString().split(" : ");
+                var fileName = tmp[0];
+                var fileSize = Integer.valueOf(tmp[1]);
+                Fragment fragment = new Fragment(fileName,fileSize,0,fileSize);
+                try {
+                    this.handler.commandeFileFragment(7,fragment);
+                } catch (IOException e1) {
 
-                e1.printStackTrace();
+                    e1.printStackTrace();
+                }
             }
         });
         this.connectButton.addActionListener(e -> {
-            var tmp = listFile.getSelectedItem().toString().split(" : ");
-            var serverAddress = tmp[0];
-            var ServerPort = Integer.valueOf(tmp[1]);
-            new Thread(new Client(serverAddress,ServerPort)).start();
+            if (peersList.getItemCount() != 0){
+                var tmp = peersList.getSelectedItem().toString().split(" : ");
+                var serverAddress = tmp[0];
+                var ServerPort = Integer.valueOf(tmp[1]);
+                new Thread(new Client(serverAddress,ServerPort)).start();
+            }
         });
     }
 
