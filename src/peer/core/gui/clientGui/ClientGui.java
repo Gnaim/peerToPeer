@@ -1,5 +1,6 @@
 package peer.core.gui.clientGui;
 
+import peer.Server;
 import peer.core.handler.Handler;
 import peer.core.logger.Logger;
 import peer.core.util.folder.File;
@@ -30,8 +31,10 @@ public class ClientGui extends JFrame implements Logger {
         setSize(900, 800);
         setVisible(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.textField1.setEnabled(true);
-        this.textField1.setText(1337+"");
+        this.textField1.setEditable(false);
+        this.logger.setEnabled(false);
+        setLocation(200,200);
+        this.textField1.setText(Server.SERVER_PORT+"");
         this.fileList = new ArrayList<>();
         this.handler = handler;
         peerButton.addActionListener(e -> {
@@ -45,12 +48,12 @@ public class ClientGui extends JFrame implements Logger {
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
+            messageField.setText("");
         });
 
         this.sendButton.addActionListener(e -> {
-            int prot = 1234;
             try {
-                handler.commandeDeclarePort(Handler.COMMANDE_DECLARE_PORT, prot);
+                handler.commandeDeclarePort(Handler.COMMANDE_DECLARE_PORT, Server.SERVER_PORT);
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
@@ -72,14 +75,14 @@ public class ClientGui extends JFrame implements Logger {
         this.getFileButton.addActionListener(e -> {
             var tmp = listFile.getSelectedItem().toString().split(" : ");
             var fileName = tmp[0];
-            var fileSize = tmp[1];
-            Fragment fragment = new Fragment(fileName,Long.getLong(fileSize),0,66530);
+            var fileSize = Integer.valueOf(tmp[1]);
+            Fragment fragment = new Fragment(fileName,fileSize,0,fileSize);
             try {
-                this.handler.commandeFileFragment(Handler.COMMANDE_FILE_FRAGMENT, fragment);
+                this.handler.commandeFileFragment(7,fragment);
             } catch (IOException e1) {
+
                 e1.printStackTrace();
             }
-//            System.out.println(fileName + "- " + fileSize);
         });
     }
 

@@ -6,10 +6,10 @@ import peer.Server;
 
 public class Main {
 
-    public static void main(String[] args) {
 
+    public static void main(String[] args) {
         try {
-            new Server(new InetSocketAddress("localhost", 1337));
+            new Server(new InetSocketAddress("localhost", Server.SERVER_PORT));
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         }

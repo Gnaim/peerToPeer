@@ -14,6 +14,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 public class Server {
+    public static int SERVER_PORT = 1337;
 
     public static HashMap<SelectionKey, ClientSession> clientMap = new HashMap<>();
     private ServerSocketChannel serverChannel;
