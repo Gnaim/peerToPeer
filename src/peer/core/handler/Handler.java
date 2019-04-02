@@ -1,6 +1,7 @@
 package peer.core.handler;
 
 import peer.Client;
+import peer.Server;
 import peer.core.util.client.session.ClientSession;
 import peer.core.gui.clientGui.ClientGui;
 import peer.core.util.client.peer.ClientPeer;
@@ -47,8 +48,6 @@ public class Handler implements InputProtocol, OutputProtocol {
 
     private ILogger iLogger;
 
-    private ArrayList<Peer> peers;
-
     private ClientGui clientGui;
 
     private Folder folder;
@@ -60,7 +59,6 @@ public class Handler implements InputProtocol, OutputProtocol {
         this.deserialize = new Deserialize(this.byteBuffer);
         this.client = client;
         this.folder = new Folder();
-        this.peers = new ArrayList<>();
         this.clientGui = new ClientGui(this);
     }
 
@@ -70,7 +68,6 @@ public class Handler implements InputProtocol, OutputProtocol {
         this.serialize = new Serialize(this.byteBuffer);
         this.deserialize = new Deserialize(this.byteBuffer);
         this.folder = new Folder();
-        this.peers = new ArrayList<>();
         this.client = client;
     }
 
@@ -97,7 +94,7 @@ public class Handler implements InputProtocol, OutputProtocol {
                     this.iLogger.command(id);
                     if(clientGui != null)
                         this.clientGui.command(id);
-                    this.commandeSendPeerList(4,peers);
+                    this.commandeSendPeerList(4, Server.peers);
                     break;
                 case COMMANDE_SEND_PEER_LIST: // ID : 4
                     this.iLogger.command(id);
@@ -152,8 +149,8 @@ public class Handler implements InputProtocol, OutputProtocol {
         address= address.split(":")[0];
         int port = this.deserialize.declarePort(id);
         Peer peer = new Peer(port, address);
-        if (!this.peers.contains(peer))
-            this.peers.add(peer);
+        if (!Server.peers.contains(peer))
+            Server.peers.add(peer);
         return port;
     }
 
@@ -166,8 +163,8 @@ public class Handler implements InputProtocol, OutputProtocol {
     public ArrayList<Peer> peerList(int id) {
         ArrayList<Peer> peers = this.deserialize.peerList(id);
         for (Peer p : peers) {
-            if (!this.peers.contains(p)) {
-                this.peers.add(p);
+            if (!Server.peers.contains(p)) {
+                Server.peers.add(p);
             }
         }
         return peers;

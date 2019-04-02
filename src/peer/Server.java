@@ -1,12 +1,14 @@
 package peer;
 
 import peer.core.util.client.session.ClientSession;
+import peer.core.util.peer.Peer;
 
 import java.net.InetSocketAddress;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -14,8 +16,8 @@ import java.util.concurrent.TimeUnit;
 public class Server implements Runnable {
 
     public static HashMap<SelectionKey, ClientSession> clientMap = new HashMap<>();
+    public static ArrayList<Peer>peers = new ArrayList<>();
     public static int SERVER_PORT = 1337;
-
     private Selector selector;
     private SelectionKey selectionKey;
     private ServerSocketChannel serverChannel;
@@ -27,8 +29,6 @@ public class Server implements Runnable {
         this.serverChannel.configureBlocking(false);
         this.selectionKey = this.serverChannel.register(this.selector = Selector.open(), SelectionKey.OP_ACCEPT);
         this.serverChannel.bind(this.inetSocketAddress);
-
-
     }
 
     @Override
