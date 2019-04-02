@@ -1,5 +1,6 @@
 package peer.core.gui.clientGui;
 
+import peer.Client;
 import peer.Server;
 import peer.core.handler.Handler;
 import peer.core.logger.Logger;
@@ -23,6 +24,8 @@ public class ClientGui extends JFrame implements Logger {
     private JTextField messageField;
     private JButton sendButton;
     private JTextField textField1;
+    private JButton connectButton;
+    private JComboBox peersList;
     private Handler handler;
     private ArrayList<File> fileList;
 
@@ -84,6 +87,12 @@ public class ClientGui extends JFrame implements Logger {
                 e1.printStackTrace();
             }
         });
+        this.connectButton.addActionListener(e -> {
+            var tmp = listFile.getSelectedItem().toString().split(" : ");
+            var serverAddress = tmp[0];
+            var ServerPort = Integer.valueOf(tmp[1]);
+            new Thread(new Client(serverAddress,ServerPort)).start();
+        });
     }
 
 
@@ -120,8 +129,10 @@ public class ClientGui extends JFrame implements Logger {
     @Override
     public void listPeer(int id, ArrayList<Peer> peers) {
         this.separator();
+        peersList.removeAllItems();
         log("[" + id + ", " + peers.size() + ", [ ");
         for (Peer p : peers) {
+            peersList.addItem(new ComboItem(p.getAddress()+ " : " + p.getPort(), p.getPort()+ ""));
             log("[ " + p.getPort() + "," + p.getAddress() + " ]");
         }
         log(" ] ]");
@@ -130,6 +141,7 @@ public class ClientGui extends JFrame implements Logger {
     @Override
     public void listFile(int id, ArrayList<File> files) {
         fileList.addAll(files);
+        listFile.removeAllItems();
         this.separator();
         log("[" + id + ", " + files.size() + ", [ ");
         for (File f : files) {
@@ -178,11 +190,4 @@ class ComboItem extends Component {
         return key;
     }
 
-    public String getKey() {
-        return key;
-    }
-
-    public String getValue() {
-        return key + "!_W_!" + value;
-    }
 }
