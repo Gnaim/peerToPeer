@@ -1,8 +1,5 @@
 # PeerToPeer Project
 
-
-# PeerToPeer Project
-
 This project is a program that participates in a peer-to-peer file exchange network.
 
 
@@ -17,5 +14,5 @@ What things you need to install the software and how to install them
 
 ## Authors
 
-- Noureddine AMRANE [github](https://github.com/noukaza/) | [WebSite](https://noureddineamrane.com)
+- Noureddine AMRANE [Github](https://github.com/noukaza/) | [WebSite](https://noureddineamrane.com)
 - Mohammed Naim Guerroui

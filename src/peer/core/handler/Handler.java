@@ -1,6 +1,7 @@
 package peer.core.handler;
 
 import peer.Client;
+import peer.core.ClientSession;
 import peer.core.gui.clientGui.ClientGui;
 import peer.core.util.ClientPeer;
 import peer.core.util.folder.File;
@@ -61,6 +62,17 @@ public class Handler implements InputProtocol, OutputProtocol {
         this.folder = new Folder();
         this.peers = new ArrayList<>();
         clientGui = new ClientGui(this);
+    }
+
+    public Handler(ClientSession client) {
+        this.byteBuffer = client.getByteBuffer();
+        this.iClientLogger = new ILogger();
+        this.serialize = new Serialize(this.byteBuffer);
+        this.deserialize = new Deserialize(this.byteBuffer);
+        this.folder = new Folder();
+        this.peers = new ArrayList<>();
+        this.client = client;
+
     }
 
 
