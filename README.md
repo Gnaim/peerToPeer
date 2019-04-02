@@ -11,8 +11,39 @@ What things you need to install the software and how to install them
 - Install **Java - 11** from [here](https://www.oracle.com/technetwork/java/javase/downloads/jdk11-downloads-5066655.html).
 
 
+### Warning
+
+Before running the project make sure that : 
+
+- You do not have server already uses the port 1337.
+- Your network dont block port 5486 and servers port.
+
+
+### Compile and Run with terminal
+
+Open the project and inside src folder:
+
+
+Run the command below To **compile** the project.
+
+```
+javac Main.java
+```
+
+Run the command below To **run** the project.
+
+```
+java Main
+```
+
+
+### License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
+
+
 
 ## Authors
 
 - Noureddine AMRANE [Github](https://github.com/noukaza/) | [WebSite](https://noureddineamrane.com)
-- Mohammed Naim Guerroui
+- Mohammed Naim Guerroui [Github](https://github.com/Gnaim/)
