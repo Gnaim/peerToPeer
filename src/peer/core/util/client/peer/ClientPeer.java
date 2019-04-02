@@ -1,4 +1,4 @@
-package peer.core.util;
+package peer.core.util.client.peer;
 
 import java.nio.channels.SocketChannel;
 

@@ -1,7 +1,7 @@
 package peer;
 
 import peer.core.handler.Handler;
-import peer.core.util.ClientPeer;
+import peer.core.util.client.peer.ClientPeer;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;

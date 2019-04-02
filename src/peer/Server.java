@@ -1,31 +1,38 @@
 package peer;
 
-import peer.core.ClientSession;
+import peer.core.util.client.session.ClientSession;
 
 import java.net.InetSocketAddress;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-public class Server {
+public class Server implements Runnable {
 
     public static HashMap<SelectionKey, ClientSession> clientMap = new HashMap<>();
-    private ServerSocketChannel serverChannel;
+    public static int SERVER_PORT = 1337;
+
     private Selector selector;
     private SelectionKey selectionKey;
+    private ServerSocketChannel serverChannel;
+    private InetSocketAddress inetSocketAddress;
 
-    public Server(InetSocketAddress listenAddress) throws Throwable {
+    public Server() throws Throwable {
+        this.inetSocketAddress = new InetSocketAddress("localhost", Server.SERVER_PORT);
         this.serverChannel = ServerSocketChannel.open();
         this.serverChannel.configureBlocking(false);
         this.selectionKey = this.serverChannel.register(this.selector = Selector.open(), SelectionKey.OP_ACCEPT);
-        this.serverChannel.bind(listenAddress);
+        this.serverChannel.bind(this.inetSocketAddress);
 
+
+    }
+
+    @Override
+    public void run() {
         Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(() -> {
             try {
                 loop();
@@ -35,7 +42,7 @@ public class Server {
         }, 0, 500, TimeUnit.MILLISECONDS);
     }
 
-    void loop() throws Throwable {
+    private void loop() throws Throwable {
         selector.selectNow();
 
         for (SelectionKey key : selector.selectedKeys()) {
@@ -56,7 +63,6 @@ public class Server {
                     System.out.println("New client ip=" + acceptedChannel.getRemoteAddress() + ", total clients=" + Server.clientMap.size());
                     //Todo add init message
 
-
                 }
 
                 if (key.isReadable()) {
@@ -74,4 +80,6 @@ public class Server {
 
         selector.selectedKeys().clear();
     }
+
+
 }

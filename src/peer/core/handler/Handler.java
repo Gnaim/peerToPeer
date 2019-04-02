@@ -1,9 +1,9 @@
 package peer.core.handler;
 
 import peer.Client;
-import peer.core.ClientSession;
+import peer.core.util.client.session.ClientSession;
 import peer.core.gui.clientGui.ClientGui;
-import peer.core.util.ClientPeer;
+import peer.core.util.client.peer.ClientPeer;
 import peer.core.util.folder.File;
 import peer.core.util.folder.Folder;
 import peer.core.util.folder.Fragment;

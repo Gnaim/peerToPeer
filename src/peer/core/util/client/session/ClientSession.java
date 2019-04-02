@@ -1,8 +1,8 @@
-package peer.core;
+package peer.core.util.client.session;
 
 import peer.Server;
 import peer.core.handler.Handler;
-import peer.core.util.ClientPeer;
+import peer.core.util.client.peer.ClientPeer;
 
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
