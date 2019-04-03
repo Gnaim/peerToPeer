@@ -19,6 +19,11 @@ Before running the project make sure that :
 - Your network dont block port 5486 and servers port.
 
 
+### Running the project
+
+To run the project you must run the class Main from **Intelij IDEA** *IDE* with **Java - 11**
+
+
 ### Compile and Run with terminal
 
 Open the project and inside src folder:
@@ -34,6 +39,16 @@ Run the command below To **run** the project.
 
 ```
 java Main
+```
+
+### Running the JarFile
+
+- **Warning :** the jar file have a path problems.
+
+Inside Jar Folde run the command below 
+
+```
+java -jar "P2P file.jar"
 ```
 
 
