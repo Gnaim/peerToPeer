@@ -21,4 +21,11 @@ public class File {
     public String toString() {
         return name+size;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        File file = (File) obj;
+
+        return file.getName().equals(name);
+    }
 }

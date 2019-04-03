@@ -184,6 +184,17 @@ public class Handler implements InputProtocol, OutputProtocol {
     @Override
     public ArrayList<File> fileList(int id) {
         ArrayList<File> files = this.deserialize.fileList(id);
+        if(this.clientGui == null){
+            for (File f : files){
+                if(!folder.listFilesForFolder().contains(f)){
+                    try {
+                        this.commandeFileFragment(7, new Fragment(f.getName(),f.getSize(),0,(int)f.getSize()));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
         this.byteBuffer.clear();
         return files;
     }
