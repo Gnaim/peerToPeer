@@ -68,7 +68,7 @@ public class Deserialize implements InputProtocol {
 
             int nbFile = this.getInt();
             System.out.println(nbFile);
-            for (int i = 0; i < nbFile && i < 50; i++) {
+            for (int i = 0; (i < nbFile) || (i < 50); i++) {
                 System.out.print(i+" ");
 
                 String fileName = this.getString();
@@ -76,7 +76,7 @@ public class Deserialize implements InputProtocol {
                 files.add(new File(fileName, fileSize));
 
             }
-        this.byteBuffer.clear().flip();
+        this.byteBuffer.clear();
         return files;
 
     }

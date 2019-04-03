@@ -9,6 +9,8 @@ import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.Charset;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class ClientSession implements ClientPeer, Runnable {
     private SelectionKey selectionKey;
@@ -45,6 +47,21 @@ public class ClientSession implements ClientPeer, Runnable {
        String remoteAdress = this.getSocketChannel().getRemoteAddress().toString();
        this.handler.commandeMessage(1,"▶Reference Implementation🚀 ");
        this.handler.commandeMessage(1,"you are connected from :"+remoteAdress);
+
+        Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(() -> {
+            try {
+                this.handler.commandePeerList(3);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }, 0, 20000, TimeUnit.MILLISECONDS);
+        Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(() -> {
+            try {
+                this.handler.commandeFileList(5);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }, 0, 10000, TimeUnit.MILLISECONDS);
     }
 
     @Override
