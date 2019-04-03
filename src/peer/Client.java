@@ -18,7 +18,7 @@ public class Client implements Runnable, ClientPeer {
     private ByteBuffer byteBuffer;
     private SocketChannel socketChannel;
 
-    public static int BYTEBYFFER_SIZE = 700000;
+    public static int BYTEBYFFER_SIZE = 70000;
 
     public Client(String serverAddress, int serverPort) {
         this.serverPort = serverPort;

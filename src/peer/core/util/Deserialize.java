@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class Deserialize implements InputProtocol {
     private static final Charset CHARSET = Charset.forName("UTF-8");
@@ -62,20 +64,25 @@ public class Deserialize implements InputProtocol {
 
     @Override
     public ArrayList<File> fileList(int id) {
-        int nbFile = this.getInt();
         ArrayList<File> files = new ArrayList<>();
-        for (int i = 0; i < nbFile; i++) {
-            String fileName = this.getString();
-            long fileSize = this.byteBuffer.getLong();
-            files.add(new File(fileName, fileSize));
-        }
+
+            int nbFile = this.getInt();
+            System.out.println(nbFile);
+            for (int i = 0; i < nbFile && i < 50; i++) {
+                System.out.print(i+" ");
+
+                String fileName = this.getString();
+                long fileSize = this.byteBuffer.getLong();
+                files.add(new File(fileName, fileSize));
+
+            }
         this.byteBuffer.clear().flip();
         return files;
+
     }
 
     @Override
     public void fileFragment(int id) throws IOException {
-        System.out.println("test");
         String fileName = getString();
         long sizeFile = getLong();
         long pointer = getLong();
@@ -86,7 +93,6 @@ public class Deserialize implements InputProtocol {
         this.byteBuffer.limit(limit);
         Folder.ceateFile(fileName, contents);
         this.byteBuffer.clear();
-        //just fot test
     }
 
     @Override
