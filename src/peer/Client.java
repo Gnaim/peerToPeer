@@ -25,6 +25,13 @@ public class Client implements Runnable, ClientPeer {
         this.serverAddress = serverAddress;
         this.byteBuffer = ByteBuffer.allocate(BYTEBYFFER_SIZE);
         this.handler = new Handler(this);
+        try {
+            new Thread(
+                    new Server()
+            ).start();
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
     }
 
     public ByteBuffer getByteBuffer() {
