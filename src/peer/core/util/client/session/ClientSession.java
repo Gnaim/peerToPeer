@@ -52,14 +52,13 @@ public class ClientSession implements ClientPeer, Runnable {
             try {
                 this.handler.commandePeerList(3);
             } catch (IOException e) {
-                e.printStackTrace();
             }
         }, 0, 20000, TimeUnit.MILLISECONDS);
         Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(() -> {
             try {
                 this.handler.commandeFileList(5);
             } catch (IOException e) {
-                e.printStackTrace();
+
             }
         }, 0, 10000, TimeUnit.MILLISECONDS);
     }

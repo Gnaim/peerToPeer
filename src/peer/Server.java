@@ -61,7 +61,6 @@ public class Server implements Runnable {
                     clientMap.put(readKey, new ClientSession(readKey, acceptedChannel));
 
                     System.out.println("New client ip=" + acceptedChannel.getRemoteAddress() + ", total clients=" + Server.clientMap.size());
-                    //Todo add init message
 
                 }
 
