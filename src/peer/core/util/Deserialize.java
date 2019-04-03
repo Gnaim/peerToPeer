@@ -22,17 +22,23 @@ public class Deserialize implements InputProtocol {
     }
 
     public String message(int id) {
-        return this.getString();
+        String message = this.getString();
+        this.byteBuffer.clear();
+
+        return message;
+
     }
 
     @Override
     public int declarePort(int id) {
-        return this.getInt();
+        int port = this.getInt();
+        this.byteBuffer.clear();
+        return port;
     }
 
     @Override
     public void askListPeer(int id) {
-        // todo
+        this.byteBuffer.clear();
     }
 
     @Override
@@ -51,7 +57,7 @@ public class Deserialize implements InputProtocol {
 
     @Override
     public void askListFile(int id) {
-        //todo
+        this.byteBuffer.clear();
     }
 
     @Override
@@ -60,9 +66,10 @@ public class Deserialize implements InputProtocol {
         ArrayList<File> files = new ArrayList<>();
         for (int i = 0; i < nbFile; i++) {
             String fileName = this.getString();
-            long fileSize = this.getLong();
+            long fileSize = this.byteBuffer.getLong();
             files.add(new File(fileName, fileSize));
         }
+        this.byteBuffer.clear().flip();
         return files;
     }
 
@@ -88,7 +95,7 @@ public class Deserialize implements InputProtocol {
         long sizeFile = getLong();
         long pointer = getLong();
         int fragment = getInt();
-
+        this.byteBuffer.clear();
         return new Fragment(fileName, sizeFile, pointer, fragment);
     }
 
