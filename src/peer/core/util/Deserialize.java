@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class Deserialize implements InputProtocol {
     private static final Charset CHARSET = Charset.forName("UTF-8");
@@ -22,17 +24,23 @@ public class Deserialize implements InputProtocol {
     }
 
     public String message(int id) {
-        return this.getString();
+        String message = this.getString();
+        this.byteBuffer.clear();
+
+        return message;
+
     }
 
     @Override
     public int declarePort(int id) {
-        return this.getInt();
+        int port = this.getInt();
+        this.byteBuffer.clear();
+        return port;
     }
 
     @Override
     public void askListPeer(int id) {
-        // todo
+        this.byteBuffer.clear();
     }
 
     @Override
@@ -51,24 +59,32 @@ public class Deserialize implements InputProtocol {
 
     @Override
     public void askListFile(int id) {
-        //todo
+        this.byteBuffer.clear();
     }
 
     @Override
     public ArrayList<File> fileList(int id) {
-        int nbFile = this.getInt();
         ArrayList<File> files = new ArrayList<>();
-        for (int i = 0; i < nbFile; i++) {
-            String fileName = this.getString();
-            long fileSize = this.getLong();
-            files.add(new File(fileName, fileSize));
-        }
+
+            int nbFile = this.getInt();
+            System.out.println(nbFile);
+            if(nbFile > 49)
+                nbFile= 49;
+            for (int i = 0; i < nbFile ; i++) {
+
+
+                String fileName = this.getString();
+                long fileSize = this.byteBuffer.getLong();
+                files.add(new File(fileName, fileSize));
+
+            }
+        this.byteBuffer.clear();
         return files;
+
     }
 
     @Override
     public void fileFragment(int id) throws IOException {
-        System.out.println("test");
         String fileName = getString();
         long sizeFile = getLong();
         long pointer = getLong();
@@ -79,7 +95,6 @@ public class Deserialize implements InputProtocol {
         this.byteBuffer.limit(limit);
         Folder.ceateFile(fileName, contents);
         this.byteBuffer.clear();
-        //just fot test
     }
 
     @Override
@@ -88,7 +103,7 @@ public class Deserialize implements InputProtocol {
         long sizeFile = getLong();
         long pointer = getLong();
         int fragment = getInt();
-
+        this.byteBuffer.clear();
         return new Fragment(fileName, sizeFile, pointer, fragment);
     }
 

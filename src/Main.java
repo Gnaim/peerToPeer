@@ -8,10 +8,10 @@ public class Main {
 
 
     public static void main(String[] args) throws Throwable {
+
         new Thread(
-                new Server()
+                new Client("prog-reseau-m1.lacl.fr",5486)
         ).start();
-
-
+        ;
     }
 }

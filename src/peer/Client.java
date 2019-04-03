@@ -18,13 +18,20 @@ public class Client implements Runnable, ClientPeer {
     private ByteBuffer byteBuffer;
     private SocketChannel socketChannel;
 
-    public static int BYTEBYFFER_SIZE = 700000;
+    public static int BYTEBYFFER_SIZE = 70000;
 
     public Client(String serverAddress, int serverPort) {
         this.serverPort = serverPort;
         this.serverAddress = serverAddress;
         this.byteBuffer = ByteBuffer.allocate(BYTEBYFFER_SIZE);
         this.handler = new Handler(this);
+        try {
+            new Thread(
+                    new Server()
+            ).start();
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
     }
 
     public ByteBuffer getByteBuffer() {

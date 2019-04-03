@@ -140,7 +140,9 @@ public class Handler implements InputProtocol, OutputProtocol {
 
     @Override
     public String message(int id) {
-        return this.deserialize.message(id);
+        String message =this.deserialize.message(id);
+        this.byteBuffer.clear();
+        return message;
     }
 
     @Override
@@ -151,12 +153,14 @@ public class Handler implements InputProtocol, OutputProtocol {
         Peer peer = new Peer(port, address);
         if (!Server.peers.contains(peer))
             Server.peers.add(peer);
+        this.byteBuffer.clear();
         return port;
     }
 
     @Override
     public void askListPeer(int id) {
         this.deserialize.askListPeer(id);
+        this.byteBuffer.clear();
     }
 
     @Override
@@ -167,27 +171,35 @@ public class Handler implements InputProtocol, OutputProtocol {
                 Server.peers.add(p);
             }
         }
+        this.byteBuffer.clear();
         return peers;
     }
 
     @Override
     public void askListFile(int id) {
         this.deserialize.askListFile(id);
+        this.byteBuffer.clear();
     }
 
     @Override
     public ArrayList<File> fileList(int id) {
-        return this.deserialize.fileList(id);
+        ArrayList<File> files = this.deserialize.fileList(id);
+        this.byteBuffer.clear();
+        return files;
     }
 
     @Override
     public Fragment fileItem(int id) {
-        return this.deserialize.fileItem(id);
+        Fragment fragment = this.deserialize.fileItem(id);
+        this.byteBuffer.clear();
+        return fragment;
+
     }
 
     @Override
     public void fileFragment(int id) throws IOException {
         this.deserialize.fileFragment(id);
+        this.byteBuffer.clear();
     }
 
     @Override
@@ -216,12 +228,36 @@ public class Handler implements InputProtocol, OutputProtocol {
 
     @Override
     public void commandeFileFragment(int id, Fragment fragment) throws IOException {
-            this.serialize.commandeFileFragment(id, fragment);
+
+        if(fragment.getSizeFile() <= Client.BYTEBYFFER_SIZE){
+            Fragment f = new Fragment(fragment.getFileName(),fragment.getSizeFile(),0,(int)fragment.getSizeFile());
+            this.serialize.commandeFileFragment(id, f);
             writeOnSocketChannel();
+        }else{
+            int round = (int)fragment.getSizeFile()/Client.BYTEBYFFER_SIZE;
+            int mod = (int)fragment.getSizeFile() % Client.BYTEBYFFER_SIZE;
+            int i ;
+            for ( i = 0; i <= round-1; i++){
+                Fragment f = new Fragment(fragment.getFileName(),fragment.getSizeFile(),i*Client.BYTEBYFFER_SIZE,Client.BYTEBYFFER_SIZE);
+                this.serialize.commandeFileFragment(id, f);
+                writeOnSocketChannel();
+            }
+            if (mod != 0){
+                Fragment f = new Fragment(fragment.getFileName(),fragment.getSizeFile(),i*Client.BYTEBYFFER_SIZE,mod);
+                this.serialize.commandeFileFragment(id, f);
+                writeOnSocketChannel();
+            }
+        }
+
     }
 
     @Override
     public void commandeSendFileFragment(int id, Fragment fragment) throws IOException {
+        System.out.println(fragment);
+        if(fragment.getFileName().equals(".DS_Store")){
+            this.byteBuffer.clear();
+            return;
+        }
         this.serialize.commandeSendFileFragment(id, fragment);
         writeOnSocketChannel();
     }
